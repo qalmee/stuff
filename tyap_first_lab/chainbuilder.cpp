@@ -8,11 +8,12 @@ vector<string> *ChainBuilder::solve(unsigned int start, pair<unsigned int, unsig
     this->borders = borders;
     this->data = data;
     this->target = (*data)[start].first;
+    ans = new vector <string> ();
     for (auto x : *data){
         map[x.first] = x.second;
     }
     bfs(string(1, target));
-    return &ans;
+    return ans;
 }
 
 void ChainBuilder::bfs(string current)
@@ -39,7 +40,7 @@ void ChainBuilder::bfs(string current)
         }
         if (terminal && s.size() >= borders.first && s.size() <= borders.second)
         {
-            ans.push_back(s);
+            ans->push_back(s);
         }
 
     }

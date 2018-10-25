@@ -2,23 +2,17 @@
 
 #include <queue>
 
-ChainBuilder::ChainBuilder(unsigned int start, pair<unsigned int, unsigned int> borders, vector<pair<char, vector<string> > > *data) :
-    borders(borders), data(*data), target((*data)[start].first)
+vector<string> *ChainBuilder::solve(unsigned int start, pair<unsigned int, unsigned int> borders,
+                                    vector<pair<char, vector<string> > > *data)
 {
-}
-
-vector<string> *ChainBuilder::solve()
-{
-    for (auto x : data){
+    this->borders = borders;
+    this->data = data;
+    this->target = (*data)[start].first;
+    for (auto x : *data){
         map[x.first] = x.second;
     }
     bfs(string(1, target));
     return &ans;
-}
-
-ChainBuilder::~ChainBuilder()
-{
-
 }
 
 void ChainBuilder::bfs(string current)

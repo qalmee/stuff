@@ -3,15 +3,15 @@
 Grammar::Grammar(QWidget *parent) : QWidget(parent)
 {
     amountOfUnterminalLabel = new QLabel("Количество нетерминальных символов");
-    amountOfTerminalLabel = new QLabel("Количество терминальных символов");
+    //amountOfTerminalLabel = new QLabel("Количество терминальных символов");
     lenthOfChainsLabel = new QLabel("Длина цепочки");
     minLengthLabel = new QLabel("От");
     maxLengthLabel = new QLabel("До");
 
     amountOfUnterminalLine = new QLineEdit();
     amountOfUnterminalLine->setValidator(new QIntValidator(0,10, this));
-    amountOfTerminalLine = new QLineEdit();
-    amountOfTerminalLine->setValidator(new QIntValidator(0,100, this));
+    //amountOfTerminalLine = new QLineEdit();
+    //amountOfTerminalLine->setValidator(new QIntValidator(0,100, this));
     minLengthLine = new QLineEdit();
     minLengthLine->setValidator(new QIntValidator(0,15, this));
     maxLengthLine = new QLineEdit();
@@ -26,8 +26,8 @@ Grammar::Grammar(QWidget *parent) : QWidget(parent)
 
     verticalLayout->addWidget(amountOfUnterminalLabel);
     verticalLayout->addWidget(amountOfUnterminalLine);
-    verticalLayout->addWidget(amountOfTerminalLabel);
-    verticalLayout->addWidget(amountOfTerminalLine);
+    //verticalLayout->addWidget(amountOfTerminalLabel);
+    //verticalLayout->addWidget(amountOfTerminalLine);
     verticalLayout->addWidget(lenthOfChainsLabel);
     verticalLayout->addLayout(horFromToLengthLayout);
 
@@ -40,11 +40,12 @@ int Grammar::getAmountOfUnterminal()
     return temp.toInt();
 }
 
-int Grammar::getAmountOfTerminal()
+/*int Grammar::getAmountOfTerminal()
 {
     QString temp = amountOfTerminalLine->text();
     return temp.toInt();
 }
+*/
 
 int Grammar::getMinLength()
 {

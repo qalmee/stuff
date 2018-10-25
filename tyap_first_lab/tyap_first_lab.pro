@@ -28,12 +28,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         grammar.cpp \
-    rules.cpp
+    rules.cpp \
+    mypushbutton.cpp
 
 HEADERS += \
         mainwindow.h \
         grammar.h \
-    rules.h
+    rules.h \
+    mypushbutton.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

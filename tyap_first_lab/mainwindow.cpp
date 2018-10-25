@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     leftUpLayout->addWidget(grammarWidget);
     leftUpLayout->addWidget(refreshGrammarButton);
+
     leftLayout->addLayout(leftUpLayout, 33);
     leftLayout->addLayout(leftDownLayout, 66);
 
@@ -43,20 +44,30 @@ void MainWindow::Initialization()
 void MainWindow::rulesRefresherSlot()
 {
     clearLayout(leftDownLayout, createdEarlier);
-    Rules *rulesWidget;
+    QScrollArea *rulesScrollArea = new QScrollArea;
 
     amountOfRules = grammarWidget->getAmountOfUnterminal();
     minLength = grammarWidget->getMinLength();
     maxLength = grammarWidget->getMaxLength();
-    amountOfTerminal = grammarWidget->getAmountOfTerminal();
+    //amountOfTerminal = grammarWidget->getAmountOfTerminal();
 
-    qDebug() << amountOfRules << " " << minLength << " " << maxLength << " " << amountOfTerminal << endl;
 
     rulesWidget = new Rules(amountOfRules);
     refreshRulesButton = new QPushButton("Построить цепочки");
-    leftDownLayout->addWidget(rulesWidget, 60);
+    connect(refreshRulesButton, &QPushButton::clicked, this, &MainWindow::build);
+    rulesScrollArea->setWidget(rulesWidget);
+    leftDownLayout->addWidget(rulesScrollArea);
     leftDownLayout->addWidget(refreshRulesButton);
     createdEarlier = true;
+
+    qDebug() << amountOfRules << " " << minLength << " " << maxLength << endl;
+
+}
+
+void MainWindow::build()
+{
+    indexTargetSymbol = rulesWidget->getTargetSymbolIndex();
+    qDebug() << "target" << indexTargetSymbol;
 }
 
 void MainWindow::clearLayout(QLayout * layout, bool deleteWidgets)

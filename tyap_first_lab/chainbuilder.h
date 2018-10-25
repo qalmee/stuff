@@ -9,16 +9,17 @@ using namespace std;
 class ChainBuilder
 {
 public:
-    vector<string> *solve(unsigned int start, pair<unsigned int, unsigned int> borders,
-                                        vector<pair<char, vector<string> > > *data);
+    ChainBuilder();
+    vector<string> *solve(unsigned int start_arg, pair<unsigned int, unsigned int> borders_arg,
+                                        vector<pair<char, vector<string> > > *data_arg);
 private:
-    static pair<unsigned int, unsigned int> borders;
-    static vector <pair<char, vector<string>>> *data;
-    static unordered_map<char, vector <string>> map;
-    static vector <string> *ans;
-    static char target;
+    pair<unsigned int, unsigned int> borders;
+    vector <pair<char, vector<string>>> *data;
+    unordered_map<char, vector <string>> map;
+    vector <string> *ans;
+    char target;
 
     void bfs(string current);
 };
 
-#endif // CHAINBUILDER_H
+#endif

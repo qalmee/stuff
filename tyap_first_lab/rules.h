@@ -13,6 +13,9 @@
 #include <QDebug>
 #include <QString>
 #include <QRadioButton>
+#include <vector>
+#include <functional>
+#include "mypushbutton.h"
 
 class Rules : public QWidget
 {
@@ -20,22 +23,38 @@ class Rules : public QWidget
 public:
     explicit Rules(QWidget *parent = nullptr);
     explicit Rules(int amountOfRules, QWidget *parent = nullptr);
+    unsigned int getTargetSymbolIndex();
+    QVector <char> getUnterminalVector();
+    std::vector<std::pair<char, std::vector<std::string> > > getChainsVector();
+
+public slots:
+    void plusButtonSlot(unsigned int index);
 
 private:
     int amountOfRules;
 
     //QVector <QVector<QString>> rules;
     QVector <QHBoxLayout> layoutOfRule;
-
+/*
     QVector <QLineEdit*> unterminalVector;
     QVector <QLineEdit*> rulesVector;
     QVector <QPushButton*> plusButtonVector;
     QVector <QRadioButton*> radioButtonVector;
-
+*/
     QVBoxLayout *wholeLayout;
-    QHBoxLayout *singleRuleHLayout;
-    QVBoxLayout *singleRuleVLayout;
 
+    struct SingleRule
+    {
+        QLineEdit* unterminal;
+        QVector <QLineEdit*> *chainsVector;
+        MyPushButton* plusButton;
+        QRadioButton* radioButton;
+        QVBoxLayout *singleRuleVLayout;
+        QHBoxLayout *singleRuleHLayout;
+        QHBoxLayout *chainLayout;
+    };
+
+    QVector <SingleRule> rules;
 
 };
 

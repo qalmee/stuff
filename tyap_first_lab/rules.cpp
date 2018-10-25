@@ -9,6 +9,7 @@ Rules::Rules(QWidget *parent) : QWidget(parent)
 Rules::Rules(int amountOfRules, QWidget *parent) : QWidget (parent)
 {
     wholeLayout = new QVBoxLayout;
+    this->amountOfRules = amountOfRules;
     for (int i = 0; i < amountOfRules; ++i)
     {
         rules.push_back({new QLineEdit(), new QVector<QLineEdit*>(1, new QLineEdit()),

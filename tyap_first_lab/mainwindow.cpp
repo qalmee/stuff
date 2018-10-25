@@ -68,11 +68,12 @@ void MainWindow::build()
 {
     ChainBuilder chainBuilder;
     auto data = rulesWidget->getChainsVector();
+    qDebug()<<rulesWidget->getTargetSymbolIndex()<<endl;
     auto result = chainBuilder.solve(rulesWidget->getTargetSymbolIndex(), std::make_pair(minLength, maxLength), &data);
     words->clear();
     QString str;
     for (auto str : *result){
-        words->append(QString::fromUtf8(str.c_str()) + "\n");
+        words->append("\"" + QString::fromUtf8(str.c_str()) + "\" : " + QString::number(str.size()) + "\n");
     }
 }
 

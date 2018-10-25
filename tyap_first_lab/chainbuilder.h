@@ -20,6 +20,8 @@ private:
     char target;
 
     void bfs(string current);
+
+    const char empty = '&';
 };
 
 #endif

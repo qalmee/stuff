@@ -1,6 +1,7 @@
 #include "chainbuilder.h"
 
 #include <queue>
+#include <unordered_set>
 
 ChainBuilder::ChainBuilder()
 {
@@ -24,12 +25,19 @@ vector<string> *ChainBuilder::solve(unsigned int start_arg, pair<unsigned int, u
 void ChainBuilder::bfs(string current)
 {
     queue<string> q;
+    unordered_set<string> set;
     q.push(current);
     while (!q.empty())
     {
         auto s = q.front();
         q.pop();
-        if (s.size() > borders.second) continue;
+        unsigned int terminalCount = 0;
+        for (auto ch : s){
+            if (!map.count(ch)) terminalCount++;
+        }
+        if (terminalCount > borders.second){
+            continue;
+        }
         bool terminal = true;
         for (unsigned int i = 0; i<s.size(); i++)
         {
@@ -38,19 +46,23 @@ void ChainBuilder::bfs(string current)
                 terminal = false;
                 for (auto str : map[s[i]])
                 {
-                    q.push(s.replace(i, 1, str));
+                    auto s1 = s;
+                    if (!str.size()){
+                        s1.erase(i, 1);
+                        q.push(s1);
+                    }
+                    else if (s1.size() <= borders.second*1.5) q.push(s1.replace(i, 1, str));
                 }
                 break;
             }
         }
         if (terminal && s.size() >= borders.first && s.size() <= borders.second)
         {
-            ans->push_back(s);
+            set.insert(s);
         }
 
     }
-    if (current.size() > borders.second){
-        return;
+    for (auto str : set){
+        ans->push_back(str);
     }
-
 }

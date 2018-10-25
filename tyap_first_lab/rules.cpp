@@ -16,7 +16,8 @@ Rules::Rules(int amountOfRules, QWidget *parent) : QWidget (parent)
                          new MyPushButton("+", i), new QRadioButton("Целевой символ"),
                         new QVBoxLayout(), new QHBoxLayout(), new QHBoxLayout()});
 
-
+        rules[i].unterminal->setMaximumWidth(30);
+        rules[i].plusButton->setMaximumWidth(30);
         rules[i].singleRuleVLayout->addWidget(rules[i].radioButton);
         rules[i].chainLayout->addWidget(rules[i].unterminal);
         rules[i].chainLayout->addWidget(rules[i].chainsVector->at(0));

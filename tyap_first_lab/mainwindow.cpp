@@ -19,11 +19,11 @@ MainWindow::MainWindow(QWidget *parent)
     leftUpLayout->addWidget(grammarWidget);
     leftUpLayout->addWidget(refreshGrammarButton);
 
-    leftLayout->addLayout(leftUpLayout, 33);
-    leftLayout->addLayout(leftDownLayout, 66);
+    leftLayout->addLayout(leftUpLayout, 20);
+    leftLayout->addLayout(leftDownLayout, 80);
 
-    wholeLayout->addLayout(leftLayout, 33);
-    wholeLayout->addLayout(rightLayout, 66);
+    wholeLayout->addLayout(leftLayout, 66);
+    wholeLayout->addLayout(rightLayout, 33);
     rightLayout->addWidget(words);
 
     QWidget *window = new QWidget();
@@ -69,7 +69,7 @@ void MainWindow::build()
     ChainBuilder chainBuilder;
     auto data = rulesWidget->getChainsVector();
     qDebug()<<rulesWidget->getTargetSymbolIndex()<<endl;
-    auto result = chainBuilder.solve(rulesWidget->getTargetSymbolIndex(), std::make_pair(minLength, maxLength), &data);
+    auto result = chainBuilder.solve(rulesWidget->getTargetSymbolIndex(), std::make_pair(grammarWidget->getMinLength(), grammarWidget->getMaxLength()), &data);
     words->clear();
     QString str;
     for (auto str : *result){

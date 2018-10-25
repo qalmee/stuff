@@ -25,7 +25,7 @@ public:
     explicit Rules(int amountOfRules, QWidget *parent = nullptr);
     int getTargetSymbolIndex();
     QVector <char> getUnterminalVector();
-    std::vector<std::pair<char, std::vector<std::string> > > &getChainsVector();
+    std::vector<std::pair<char, std::vector<std::string> > > getChainsVector();
 
 public slots:
     void plusButtonSlot(unsigned int index);

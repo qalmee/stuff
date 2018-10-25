@@ -35,13 +35,24 @@ int Rules::getTargetSymbolIndex()
         if(rules[i].radioButton->isChecked())
             return i;
     }
+    return 0;
 }
 
-//std::vector<std::pair<char, std::vector<std::string> > >& Rules::getChainsVector()
-//{
-//    return vector<>
+std::vector<std::pair<char, std::vector<std::string> > > Rules::getChainsVector()
+{
+    std::vector <std::pair <char, std::vector<std::string> > >  vectorOfGrammar;
+    for (int i = 0; i < amountOfRules; ++i)
+    {
+        std::vector <std::string> chains;
+        for (auto s : (*rules[i].chainsVector))
+        {
+            chains.push_back(s->text().toStdString());
+        }
 
-//}
+        vectorOfGrammar.push_back(make_pair(rules[i].unterminal->text().toStdString()[0], chains));
+    }
+    return vectorOfGrammar;
+}
 
 void Rules::plusButtonSlot(unsigned int index)
 {

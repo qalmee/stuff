@@ -36,6 +36,7 @@ private:
 
     Grammar *grammarWidget;
     Rules *rulesWidget;
+    QTextEdit *words;
 
     QPushButton *refreshGrammarButton;
     QPushButton *refreshRulesButton;

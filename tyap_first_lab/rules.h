@@ -23,7 +23,7 @@ class Rules : public QWidget
 public:
     explicit Rules(QWidget *parent = nullptr);
     explicit Rules(int amountOfRules, QWidget *parent = nullptr);
-    int getTargetSymbolIndex();
+    unsigned int getTargetSymbolIndex();
     QVector <char> getUnterminalVector();
     std::vector<std::pair<char, std::vector<std::string> > > getChainsVector();
 

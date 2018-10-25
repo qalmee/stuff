@@ -28,7 +28,7 @@ Rules::Rules(int amountOfRules, QWidget *parent) : QWidget (parent)
     setLayout(wholeLayout);
 }
 
-int Rules::getTargetSymbolIndex()
+unsigned int Rules::getTargetSymbolIndex()
 {
     for (int i = 0; i < rules.size(); ++i)
     {

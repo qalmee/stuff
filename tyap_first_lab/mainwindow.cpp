@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "chainbuilder.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -13,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     grammarWidget = new Grammar();
     refreshGrammarButton = new QPushButton("Обновить");
 
-    QTextEdit *words = new QTextEdit();
+    words = new QTextEdit();
 
     leftUpLayout->addWidget(grammarWidget);
     leftUpLayout->addWidget(refreshGrammarButton);
@@ -65,8 +66,14 @@ void MainWindow::rulesRefresherSlot()
 
 void MainWindow::build()
 {
-    indexTargetSymbol = rulesWidget->getTargetSymbolIndex();
-    qDebug() << "target" << indexTargetSymbol;
+    ChainBuilder chainBuilder;
+    auto data = rulesWidget->getChainsVector();
+    auto result = chainBuilder.solve(rulesWidget->getTargetSymbolIndex(), std::make_pair(minLength, maxLength), &data);
+    words->clear();
+    QString str;
+    for (auto str : *result){
+        words->append(QString::fromUtf8(str.c_str()) + "\n");
+    }
 }
 
 void MainWindow::clearLayout(QLayout * layout, bool deleteWidgets)

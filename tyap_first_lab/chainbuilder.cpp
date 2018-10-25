@@ -1,7 +1,7 @@
 #include "chainbuilder.h"
 
 #include <queue>
-#include <unordered_set>
+#include <set>
 
 ChainBuilder::ChainBuilder()
 {
@@ -25,7 +25,7 @@ vector<string> *ChainBuilder::solve(unsigned int start_arg, pair<unsigned int, u
 void ChainBuilder::bfs(string current)
 {
     queue<string> q;
-    unordered_set<string> set;
+    set<string> set;
     q.push(current);
     while (!q.empty())
     {

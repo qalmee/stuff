@@ -29,7 +29,7 @@ private:
 public:
     explicit Grammar(QWidget *parent = nullptr);
     int getAmountOfUnterminal();
-    int getAmountOfTerminal();
+    //int getAmountOfTerminal();
     int getMinLength();
     int getMaxLength();
 };

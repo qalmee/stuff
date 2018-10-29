@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-
+#include "chainbuilder.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -14,15 +14,16 @@ MainWindow::MainWindow(QWidget *parent)
     grammarWidget = new Grammar();
     refreshGrammarButton = new QPushButton("Обновить");
 
-    QTextEdit *words = new QTextEdit();
+    words = new QTextEdit();
 
     leftUpLayout->addWidget(grammarWidget);
     leftUpLayout->addWidget(refreshGrammarButton);
-    leftLayout->addLayout(leftUpLayout, 33);
-    leftLayout->addLayout(leftDownLayout, 66);
 
-    wholeLayout->addLayout(leftLayout, 33);
-    wholeLayout->addLayout(rightLayout, 66);
+    leftLayout->addLayout(leftUpLayout, 20);
+    leftLayout->addLayout(leftDownLayout, 80);
+
+    wholeLayout->addLayout(leftLayout, 66);
+    wholeLayout->addLayout(rightLayout, 33);
     rightLayout->addWidget(words);
 
     QWidget *window = new QWidget();
@@ -43,20 +44,37 @@ void MainWindow::Initialization()
 void MainWindow::rulesRefresherSlot()
 {
     clearLayout(leftDownLayout, createdEarlier);
-    Rules *rulesWidget;
+    QScrollArea *rulesScrollArea = new QScrollArea;
 
     amountOfRules = grammarWidget->getAmountOfUnterminal();
     minLength = grammarWidget->getMinLength();
     maxLength = grammarWidget->getMaxLength();
-    amountOfTerminal = grammarWidget->getAmountOfTerminal();
+    //amountOfTerminal = grammarWidget->getAmountOfTerminal();
 
-    qDebug() << amountOfRules << " " << minLength << " " << maxLength << " " << amountOfTerminal << endl;
 
     rulesWidget = new Rules(amountOfRules);
     refreshRulesButton = new QPushButton("Построить цепочки");
-    leftDownLayout->addWidget(rulesWidget, 60);
+    connect(refreshRulesButton, &QPushButton::clicked, this, &MainWindow::build);
+    rulesScrollArea->setWidget(rulesWidget);
+    leftDownLayout->addWidget(rulesScrollArea);
     leftDownLayout->addWidget(refreshRulesButton);
     createdEarlier = true;
+
+    qDebug() << amountOfRules << " " << minLength << " " << maxLength << endl;
+
+}
+
+void MainWindow::build()
+{
+    ChainBuilder chainBuilder;
+    auto data = rulesWidget->getChainsVector();
+    qDebug()<<rulesWidget->getTargetSymbolIndex()<<endl;
+    auto result = chainBuilder.solve(rulesWidget->getTargetSymbolIndex(), std::make_pair(grammarWidget->getMinLength(), grammarWidget->getMaxLength()), &data);
+    words->clear();
+    QString str;
+    for (auto str : *result){
+        words->append("\"" + QString::fromUtf8(str.c_str()) + "\" : " + QString::number(str.size()) + "\n");
+    }
 }
 
 void MainWindow::clearLayout(QLayout * layout, bool deleteWidgets)

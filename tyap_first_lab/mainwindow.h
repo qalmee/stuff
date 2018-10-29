@@ -16,6 +16,7 @@
 #include <QDebug>
 #include <QSizePolicy>
 #include <QTextEdit>
+#include <QScrollArea>
 
 class MainWindow : public QMainWindow
 {
@@ -26,12 +27,16 @@ private:
     int maxLength;
     int minLength;
     int amountOfTerminal;
+    unsigned int indexTargetSymbol;
+
     QVector <QString> terminalSymbols;
     QVector <QString> unterminalSymbols;
     QVector <QString> rules;
     bool createdEarlier;
 
     Grammar *grammarWidget;
+    Rules *rulesWidget;
+    QTextEdit *words;
 
     QPushButton *refreshGrammarButton;
     QPushButton *refreshRulesButton;
@@ -53,6 +58,7 @@ public:
 
 public slots:
     void rulesRefresherSlot();
+    void build();
 
 signals:
     void rulesRefreshSignal();

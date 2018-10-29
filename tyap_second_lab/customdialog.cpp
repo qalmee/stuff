@@ -39,11 +39,19 @@ void CustomDialog::okPressed()
     QString s = numberOfStates->text();
     QString s1 = numberOfTerminals->text();
     if (QValidator::Acceptable != numberOfStates->validator()->validate(s, p)){
+<<<<<<< HEAD
         QMessageBox::warning(this, "Ошибка", "Некорректный ввод");
     }
     else if (QValidator::Acceptable != numberOfTerminals->validator()->validate(s1, p)){
         QMessageBox::warning(this, "Ошибка", "Некорректный ввод");
     } else {
+=======
+        QMessageBox::information(this, "Ошибка", "Некорректный ввод");
+    }
+    else if (QValidator::Acceptable != numberOfTerminals->validator()->validate(s1, p)){
+        QMessageBox::information(this, "Ошибка", "Некорректный ввод");
+    }else{
+>>>>>>> 8e3309455d29244fd9b78dff785d98d53c3320ea
         emit finished(numberOfStates->text().toInt(), numberOfTerminals->text().toInt());
     }
 }

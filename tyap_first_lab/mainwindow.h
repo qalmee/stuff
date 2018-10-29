@@ -36,16 +36,16 @@ private:
 
     Grammar *grammarWidget;
     Rules *rulesWidget;
-    QTextEdit *words;
+    QLineEdit *words;
 
     QPushButton *refreshGrammarButton;
     QPushButton *refreshRulesButton;
 
     QHBoxLayout *wholeLayout;
-    QVBoxLayout *leftUpLayout;
-    QVBoxLayout *leftDownLayout;
-    QVBoxLayout *rightLayout;
-    QVBoxLayout *leftLayout;
+    QGridLayout *leftUpLayout;
+    QGridLayout *leftDownLayout;
+    QGridLayout *rightLayout;
+    QGridLayout *leftLayout;
 
 
 

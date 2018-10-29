@@ -5,16 +5,16 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setGeometry(200, 200, 800,600);
     wholeLayout = new QHBoxLayout;
-    leftUpLayout = new QVBoxLayout;
-    leftDownLayout = new QVBoxLayout;
-    leftLayout = new QVBoxLayout;
-    rightLayout = new QVBoxLayout;
+    leftUpLayout = new QGridLayout;
+    leftDownLayout = new QGridLayout;
+    leftLayout = new QGridLayout;
+    rightLayout = new QGridLayout;
     createdEarlier = false;
 
     grammarWidget = new Grammar();
     refreshGrammarButton = new QPushButton("Обновить");
 
-    words = new QTextEdit();
+    words = new QLineEdit();
 
     leftUpLayout->addWidget(grammarWidget);
     leftUpLayout->addWidget(refreshGrammarButton);

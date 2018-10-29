@@ -8,13 +8,13 @@ Rules::Rules(QWidget *parent) : QWidget(parent)
 
 Rules::Rules(int amountOfRules, QWidget *parent) : QWidget (parent)
 {
-    wholeLayout = new QVBoxLayout;
+    wholeLayout = new QGridLayout;
     this->amountOfRules = amountOfRules;
     for (int i = 0; i < amountOfRules; ++i)
     {
         rules.push_back({new QLineEdit(), new QVector<QLineEdit*>(1, new QLineEdit()),
                          new MyPushButton("+", i), new QRadioButton("Целевой символ"),
-                        new QVBoxLayout(), new QHBoxLayout(), new QHBoxLayout()});
+                        new QGridLayout(), new QHBoxLayout(), new QHBoxLayout()});
 
         rules[i].unterminal->setMaximumWidth(30);
         rules[i].plusButton->setMaximumWidth(30);

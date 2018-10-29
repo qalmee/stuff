@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <Q
+#include "customdialog.h"
 namespace Ui {
 class MainWindow;
 }
@@ -16,7 +16,7 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    CustomDialog *dialog;
 
 };
 

@@ -4,7 +4,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-
+    dialog = new CustomDialog();
+    dialog->show();
 }
 
 MainWindow::~MainWindow()

@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QFrame>
+#include <QRegExpValidator>
 
 class MainWindow : public QMainWindow
 {
@@ -60,6 +61,9 @@ private:
 
     QApplication *app;
     QLineEdit *chainLine;
+
+    QRegExp *regExp;
+    QRegExpValidator *regExpVal;
 
 };
 

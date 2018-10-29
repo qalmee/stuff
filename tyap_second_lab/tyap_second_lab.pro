@@ -28,11 +28,13 @@ QMAKE_CXXFLAGS += /std:c++17
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    customdialog.cpp
+    customdialog.cpp \
+    machine.cpp
 
 HEADERS += \
         mainwindow.h \
-    customdialog.h
+    customdialog.h \
+    machine.h
 
 FORMS += \
         mainwindow.ui

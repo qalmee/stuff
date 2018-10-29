@@ -3,12 +3,17 @@
 #include <QDebug>
 #include <QSet>
 #include <QMessageBox>
+#include <QStyle>
+
 
 MainWindow::MainWindow(QApplication *a, QWidget *parent) :
     QMainWindow(parent), app(a)
 {
     dialog = new CustomDialog(this);
     dialog->show();
+
+    regExp = new QRegExp(".");
+    regExpVal = new QRegExpValidator(*regExp);
 
     tableLayout = new QGridLayout;
     window = new QWidget();
@@ -97,7 +102,7 @@ void MainWindow::checkChainSlot()
 
         for (int j = 0; j < numberOfTerminals; ++j)
         {
-            if (!statesNamesSet.contains(statesValuesLines[i][j]->text())){
+            if (!statesNamesSet.contains(statesValuesLines[i][j]->text()) && statesValuesLines[i][j]->text() != ""){
                 this->badInputSlot();
                 return;
             }
@@ -133,6 +138,7 @@ void MainWindow::prepareView()
     }
     statesValuesLines.clear();
     statesLines.reserve(numberOfStates);
+
     for (int i = 0; i < numberOfStates ; ++i)
     {
         QLineEdit *temp = new QLineEdit();
@@ -146,6 +152,7 @@ void MainWindow::prepareView()
     {
         QLineEdit *temp = new QLineEdit();
         temp->setMaximumWidth(60);
+        temp->setValidator(regExpVal);
         terminalsLines.push_back(temp);
         tableLayout->addWidget(temp, 0, i + 2);
     }
@@ -162,10 +169,9 @@ void MainWindow::prepareView()
             tableLayout->addWidget(temp, i + 2, j + 2);
         }
     }
+    statesValuesLines[0][0]->style();
 
     tableLayout->addWidget(lineH, 1, 0, 1, numberOfTerminals + 2);
     tableLayout->addWidget(lineV, 0, 1, numberOfStates + 2, 1);
     tableLayout->addLayout(chainLayout, numberOfStates + 3, 1, 3, numberOfTerminals + 1);
-
-
 }

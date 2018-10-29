@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QFrame>
+#include <QComboBox>
 
 class MainWindow : public QMainWindow
 {
@@ -26,6 +27,7 @@ public slots:
     void checkChainSlot();
     void returnToDialogSlot();
     void badInputSlot();
+    void checkStatesSlot();
 
 signals:
     void badInput();    
@@ -55,11 +57,16 @@ private:
 
     QWidget *window;
     QLabel *chainLabel;
+    QLabel *startStateLabel;
+    QLabel *finishStateLabel;
 
-    QFrame *lineV, *lineH, *secondLineH;
+    QFrame *lineV, *lineH, *secondLineH, *secondLineV, *thirdLineH;
 
     QApplication *app;
     QLineEdit *chainLine;
+
+    QComboBox *startState;
+    QComboBox *finishState;
 
 };
 

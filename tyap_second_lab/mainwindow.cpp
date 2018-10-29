@@ -26,25 +26,32 @@ MainWindow::MainWindow(QApplication *a, QWidget *parent) :
     lineH->setFrameShadow(QFrame::Sunken);
     secondLineH = new QFrame;
     secondLineH->setFrameShape(QFrame::HLine);
-    secondLineH->setFrameShadow(QFrame::Plain);
+    secondLineH->setFrameShadow(QFrame::Sunken);
     secondLineH->setLineWidth(2);
-    secondLineH->setMaximumWidth(200);
+
+    secondLineV = new QFrame;
+    secondLineV->setFrameShape(QFrame::VLine);
+    secondLineV->setFrameShadow(QFrame::Sunken);
+    secondLineV->setLineWidth(2);
+
+    thirdLineH = new QFrame;
+    thirdLineH->setFrameShape(QFrame::HLine);
+    thirdLineH->setFrameShadow(QFrame::Plain);
+    thirdLineH->setLineWidth(2);
+
+
 
     chainLabel = new QLabel ("Введите цепочку:");
-    chainLabel->setMaximumWidth(200);
     chainLine = new QLineEdit();
-    chainLine->setMaximumWidth(200);
     checkChainButton = new QPushButton ("Проверить цепочку");
-    checkChainButton->setMaximumWidth(200);
     chainLayout = new QVBoxLayout;
     returnToDialogButton = new QPushButton("Вернуться к условию");
-    returnToDialogButton->setMaximumWidth(200);
 
-    chainLayout->addWidget(chainLabel);
-    chainLayout->addWidget(chainLine);
-    chainLayout->addWidget(checkChainButton);
-    chainLayout->addWidget(secondLineH);
-    chainLayout->addWidget(returnToDialogButton);
+
+    startStateLabel = new QLabel("Начальное состояние:");
+    finishStateLabel = new QLabel("Конечное состояние:");
+    startState = new QComboBox();
+    finishState = new QComboBox();
 
     QObject::connect(dialog, &CustomDialog::finished, this, &MainWindow::okDialog);
     QObject::connect(dialog, &CustomDialog::canceled, this, &MainWindow::cancelDialog);
@@ -105,6 +112,8 @@ void MainWindow::checkChainSlot()
         }
     }
     chainString = chainLine->text();
+
+
 }
 
 void MainWindow::badInputSlot()
@@ -139,6 +148,8 @@ void MainWindow::prepareView()
         temp->setMaximumWidth(150);
         statesLines.push_back(temp);
         tableLayout->addWidget(temp, i + 2, 0);
+        QObject::connect(temp, &QLineEdit::textChanged, this, &MainWindow::checkStatesSlot);
+
     }
 
     terminalsLines.reserve(numberOfTerminals);
@@ -163,9 +174,46 @@ void MainWindow::prepareView()
         }
     }
 
+    tableLayout->addWidget(startStateLabel, numberOfStates + 3, 0);
+    tableLayout->addWidget(startState, numberOfStates + 4, 0);
+    tableLayout->addWidget(finishStateLabel, numberOfStates + 5, 0);
+    tableLayout->addWidget(finishState, numberOfStates + 6, 0);
+
+    tableLayout->addWidget(chainLabel, numberOfStates + 3, 2, 1, numberOfTerminals + 1);
+    tableLayout->addWidget(chainLine, numberOfStates + 4, 2, 1, numberOfTerminals + 1);
+    tableLayout->addWidget(checkChainButton, numberOfStates + 5, 2, 1, numberOfTerminals + 1);
+
+    tableLayout->addWidget(secondLineV, numberOfStates + 2, 1, 6, 1);
+    tableLayout->addWidget(secondLineH, numberOfStates + 6, 1, 1, numberOfTerminals + 1);
+    tableLayout->addWidget(thirdLineH, numberOfStates + 2, 0, 1, numberOfTerminals+2);
+
+    tableLayout->addWidget(returnToDialogButton, numberOfStates + 7, 2, 1, numberOfTerminals);
+
+
     tableLayout->addWidget(lineH, 1, 0, 1, numberOfTerminals + 2);
     tableLayout->addWidget(lineV, 0, 1, numberOfStates + 2, 1);
-    tableLayout->addLayout(chainLayout, numberOfStates + 3, 1, 3, numberOfTerminals + 1);
+}
 
+void MainWindow::checkStatesSlot()
+{
+    bool allEntered = true;
+    for (int i = 0; i < numberOfStates; ++i)
+    {
+        if(statesLines[i]->text().isEmpty()) allEntered = false;
+    }
+    if (allEntered)
+    {
+        startState->clear();
+        finishState->clear();
+        for (int i = 0; i < numberOfStates; ++i)
+        {
+            startState->addItem(statesLines[i]->text());
+            finishState->addItem(statesLines[i]->text());
+        }
 
+        startStateLabel->show();
+        startState->show();
+        finishStateLabel->show();
+        finishState->show();
+    }
 }

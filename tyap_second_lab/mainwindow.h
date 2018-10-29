@@ -10,6 +10,7 @@
 #include <QString>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QFrame>
 
 class MainWindow : public QMainWindow
 {
@@ -23,10 +24,11 @@ private:
     CustomDialog *dialog;
     int numberOfStates;
     int numberOfTerminals;
+    QString chainString;
 
     QVector <QString> statesNames;
     QVector <QString> terminals;
-    QVector <QString> statesValues;
+    QVector <QVector<QString>> statesValues;
 
     QVBoxLayout *wholeLayout;
     QVBoxLayout *chainLayout;
@@ -37,7 +39,10 @@ private:
     QVector <QVector <QLineEdit*>> statesValuesLines;
 
     QPushButton *checkChainButton;
-    QLineEdit *chain;
+    QLineEdit *chainLine;
+
+public slots:
+    void checkChainSlot();
 };
 
 #endif // MAINWINDOW_H

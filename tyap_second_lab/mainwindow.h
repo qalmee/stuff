@@ -24,6 +24,7 @@ public slots:
     void cancelDialog();
     void okDialog(int numberOfStates, int numberOfTerminals);
     void checkChainSlot();
+    void returnToDialogSlot();
 
 private:
 
@@ -46,11 +47,12 @@ private:
     QVector <QVector <QLineEdit*>> statesValuesLines;
 
     QPushButton *checkChainButton;
+    QPushButton *returnToDialogButton;
 
     QWidget *window;
     QLabel *chainLabel;
 
-    QFrame *lineV, *lineH;
+    QFrame *lineV, *lineH, *secondLineH;
 
     QApplication *app;
     QLineEdit *chainLine;

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -7,8 +8,6 @@ MainWindow::MainWindow(QWidget *parent) :
     dialog = new CustomDialog();
     dialog->show();
 
-    numberOfStates = 3;
-    numberOfTerminals = 3;
     tableLayout = new QGridLayout;
 
     QLabel *statesAlphabetlabel = new QLabel("Состояния\\Алфавит");
@@ -43,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     statesValuesLines.reserve(numberOfStates);
     for (int i = 0; i < numberOfStates; ++i)
     {
-        statesValuesLines.push_back(QVector<QLineEdit*>(numberOfTerminals));
+        statesValuesLines.push_back(QVector<QLineEdit*>());
         for (int j = 0; j < numberOfTerminals; ++j)
         {
             QLineEdit *temp = new QLineEdit();
@@ -88,7 +87,7 @@ void MainWindow::checkChainSlot()
 
     for (int i = 0; i < numberOfStates; ++i)
     {
-        statesValues.push_back(QVector<QString>(numberOfTerminals));
+        statesValues.push_back(QVector<QString>());
 
         for (int j = 0; j < numberOfTerminals; ++j)
         {
@@ -97,5 +96,4 @@ void MainWindow::checkChainSlot()
     }
 
     chainString = chainLine->text();
-
 }

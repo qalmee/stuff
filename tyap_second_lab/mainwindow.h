@@ -24,6 +24,10 @@ public slots:
     void cancelDialog();
     void okDialog(int numberOfStates, int numberOfTerminals);
     void checkChainSlot();
+    void badInputSlot();
+
+signals:
+    void badInput();
 
 private:
 

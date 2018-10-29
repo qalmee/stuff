@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
+#include <QSet>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QApplication *a, QWidget *parent) :
     QMainWindow(parent), app(a)
@@ -36,6 +38,7 @@ MainWindow::MainWindow(QApplication *a, QWidget *parent) :
     QObject::connect(dialog, &CustomDialog::finished, this, &MainWindow::okDialog);
     QObject::connect(dialog, &CustomDialog::canceled, this, &MainWindow::cancelDialog);
     QObject::connect(checkChainButton, &QPushButton::clicked, this, &MainWindow::checkChainSlot);
+   // QObject::connect(this, &MainWindow::badInput, this, &MainWindow::badInputSlot);
 }
 
 MainWindow::~MainWindow()
@@ -58,14 +61,22 @@ void MainWindow::okDialog(int numberOfStates, int numberOfTerminals)
 }
 void MainWindow::checkChainSlot()
 {
+    QSet<QString> terminalsSet, statesNamesSet;
     for (int i = 0; i < numberOfTerminals; ++i)
     {
+        terminalsSet.insert(terminalsLines[i]->text());
         terminals.push_back(terminalsLines[i]->text());
     }
 
     for (int i = 0; i < numberOfStates; ++i)
     {
+        statesNamesSet.insert(statesLines[i]->text());
         statesNames.push_back(statesLines[i]->text());
+    }
+    if (terminalsSet.size() != terminals.size() || statesNamesSet.size() != statesNames.size()
+            || terminalsSet.contains("") || statesNamesSet.contains("")){
+        this->badInputSlot();
+        return;
     }
 
     for (int i = 0; i < numberOfStates; ++i)
@@ -74,11 +85,19 @@ void MainWindow::checkChainSlot()
 
         for (int j = 0; j < numberOfTerminals; ++j)
         {
+            if (!statesNamesSet.contains(statesValuesLines[i][j]->text())){
+                this->badInputSlot();
+                return;
+            }
             statesValues[i].push_back(statesValuesLines[i][j]->text());
         }
     }
-
     chainString = chainLine->text();
+}
+
+void MainWindow::badInputSlot()
+{
+    QMessageBox::warning(this, "Ошибка", "Что-то не так в вашем вводе");
 }
 
 void MainWindow::prepareView()

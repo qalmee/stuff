@@ -1,14 +1,16 @@
 #include "customdialog.h"
 #include <QIntValidator>
+#include <QMessageBox>
+#include <QDebug>
 
-CustomDialog::CustomDialog() : QDialog ()
+CustomDialog::CustomDialog(QWidget *parent) : QDialog (parent)
 {
     layout = new QGridLayout(this);
     buttons = new QGridLayout();
     numberOfStates = new QLineEdit();
     numberOfTerminals = new QLineEdit();
-    numberOfStates->setValidator(new QIntValidator(0, 20));
-    numberOfTerminals->setValidator(new QIntValidator(0, 20));
+    numberOfStates->setValidator(new QIntValidator(1, 20));
+    numberOfTerminals->setValidator(new QIntValidator(1, 20));
     ok = new QPushButton("Ок");
     cancel = new QPushButton("Отмена");
     layout->addWidget(numberOfStates, 0, 1, 1, 1);
@@ -24,7 +26,6 @@ CustomDialog::CustomDialog() : QDialog ()
 
     QObject::connect(ok, &QPushButton::clicked, this, &CustomDialog::okPressed);
     QObject::connect(cancel, &QPushButton::clicked, this, &CustomDialog::cancelPressed);
-
 }
 
 CustomDialog::~CustomDialog()
@@ -35,16 +36,25 @@ CustomDialog::~CustomDialog()
 void CustomDialog::okPressed()
 {
     int p;
-    QString s;
+    QString s = numberOfStates->text();
+    QString s1 = numberOfTerminals->text();
     if (QValidator::Acceptable != numberOfStates->validator()->validate(s, p)){
-        return;
+//        qDebug()<<numberOfStates->validator()->validate(s, p)<<" "<<s<<endl;
+        QMessageBox::information(nullptr, "Ошибка", "Некорректный ввод");
     }
-    if (QValidator::Acceptable != numberOfTerminals->validator()->validate(s, p)){
-        return;
+    else if (QValidator::Acceptable != numberOfTerminals->validator()->validate(s1, p)){
+        QMessageBox::information(nullptr, "Ошибка", "Некорректный ввод");
+    }else{
+        emit finished(numberOfStates->text().toInt(), numberOfTerminals->text().toInt());
     }
-    emit finished(numberOfStates->text().toInt(), numberOfTerminals->text().toInt());
 }
 void CustomDialog::cancelPressed()
 {
     emit canceled();
+}
+
+void CustomDialog::clear()
+{
+    this->numberOfStates->clear();
+    this->numberOfTerminals->clear();
 }

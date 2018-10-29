@@ -17,10 +17,17 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QApplication *a, QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void cancelDialog();
+    void okDialog(int numberOfStates, int numberOfTerminals);
+    void checkChainSlot();
+
 private:
+
+    void prepareView();
     CustomDialog *dialog;
     int numberOfStates;
     int numberOfTerminals;
@@ -39,10 +46,15 @@ private:
     QVector <QVector <QLineEdit*>> statesValuesLines;
 
     QPushButton *checkChainButton;
+
+    QWidget *window;
+    QLabel *chainLabel;
+
+    QFrame *lineV, *lineH;
+
+    QApplication *app;
     QLineEdit *chainLine;
 
-public slots:
-    void checkChainSlot();
 };
 
 #endif // MAINWINDOW_H

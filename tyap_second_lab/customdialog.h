@@ -3,8 +3,8 @@
 
 #include <QDialog>
 #include <QGridLayout>
-//#include <QVBoxLayout>
-//#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QLabel>
@@ -25,7 +25,7 @@ signals:
 
 private:
     QGridLayout *layout;
-    QHBoxLayout *buttons;
+    QGridLayout *buttons;
     QLabel *numberOfStatesLabel, *numberOfTerminalsLabel;
     QLineEdit *numberOfStates, *numberOfTerminals;
     QPushButton *ok, *cancel;

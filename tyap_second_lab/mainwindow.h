@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "customdialog.h"
 #include <QGridLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QVector>
 #include <QString>

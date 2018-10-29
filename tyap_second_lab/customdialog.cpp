@@ -4,7 +4,7 @@
 CustomDialog::CustomDialog() : QDialog ()
 {
     layout = new QGridLayout(this);
-    buttons = new QHBoxLayout();
+    buttons = new QGridLayout();
     numberOfStates = new QLineEdit();
     numberOfTerminals = new QLineEdit();
     numberOfStates->setValidator(new QIntValidator(0, 20));
@@ -14,8 +14,8 @@ CustomDialog::CustomDialog() : QDialog ()
     layout->addWidget(numberOfStates, 0, 1, 1, 1);
     layout->addWidget(numberOfTerminals, 1, 1, 1, 1);
     layout->addLayout(buttons, 2, 0, 1, 5);
-    buttons->addWidget(ok);
-    buttons->addWidget(cancel);
+    buttons->addWidget(ok, 0, 0);
+    buttons->addWidget(cancel, 0, 1);
 
     numberOfStatesLabel = new QLabel("Количество состояний");
     numberOfTerminalsLabel = new QLabel("Количество терминальных символов");

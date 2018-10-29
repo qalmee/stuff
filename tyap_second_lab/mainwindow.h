@@ -3,9 +3,12 @@
 
 #include <QMainWindow>
 #include "customdialog.h"
-namespace Ui {
-class MainWindow;
-}
+#include <QGridLayout>
+#include <QLabel>
+#include <QVector>
+#include <QString>
+#include <QLineEdit>
+#include <QPushButton>
 
 class MainWindow : public QMainWindow
 {
@@ -17,7 +20,23 @@ public:
 
 private:
     CustomDialog *dialog;
+    int numberOfStates;
+    int numberOfTerminals;
 
+    QVector <QString> statesNames;
+    QVector <QString> terminals;
+    QVector <QString> statesValues;
+
+    QVBoxLayout *wholeLayout;
+    QVBoxLayout *chainLayout;
+    QGridLayout *tableLayout;
+
+    QVector <QLineEdit*> terminalsLines;
+    QVector <QLineEdit*> statesLines;
+    QVector <QVector <QLineEdit*>> statesValuesLines;
+
+    QPushButton *checkChainButton;
+    QLineEdit *chain;
 };
 
 #endif // MAINWINDOW_H

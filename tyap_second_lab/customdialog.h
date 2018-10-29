@@ -13,12 +13,13 @@ class CustomDialog : public QDialog
 {
     Q_OBJECT
 public:
-    CustomDialog();
+    CustomDialog(QWidget *parent = nullptr);
     virtual ~CustomDialog();
 
 public slots:
     void okPressed();
     void cancelPressed();
+    void clear();
 signals:
     void finished(int numberOfStates, int numberOfTerminals);
     void canceled();

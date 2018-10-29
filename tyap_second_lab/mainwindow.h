@@ -16,8 +16,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QApplication *a, QWidget *parent = nullptr);
     ~MainWindow();
+
+public slots:
+    void cancelDialog();
+    void okDialog(int numberOfStates, int numberOfTerminals);
 
 private:
     CustomDialog *dialog;
@@ -38,6 +42,8 @@ private:
 
     QPushButton *checkChainButton;
     QLineEdit *chain;
+
+    QApplication *app;
 };
 
 #endif // MAINWINDOW_H

@@ -1,10 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent)
+MainWindow::MainWindow(QApplication *a, QWidget *parent) :
+    QMainWindow(parent), app(a)
 {
-    dialog = new CustomDialog();
+    dialog = new CustomDialog(this);
     dialog->show();
 
     tableLayout = new QGridLayout;
@@ -54,8 +54,25 @@ MainWindow::MainWindow(QWidget *parent) :
     QWidget *window = new QWidget();
     window->setLayout(tableLayout);
     setCentralWidget(window);
+
+    connect(dialog, &CustomDialog::finished, this, &MainWindow::okDialog);
+    connect(dialog, &CustomDialog::canceled, this, &MainWindow::cancelDialog);
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::cancelDialog()
+{
+    app->quit();
+}
+
+void MainWindow::okDialog(int numberOfStates, int numberOfTerminals)
+{
+    this->numberOfStates = numberOfStates;
+    this->numberOfTerminals = numberOfTerminals;
+    this->dialog->hide();
+    this->dialog->clear();
+    this->show();
 }

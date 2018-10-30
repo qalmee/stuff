@@ -17,7 +17,7 @@ Grammar::Grammar(QWidget *parent) : QWidget(parent)
     maxLengthLine = new QLineEdit();
     maxLengthLine->setValidator(new QIntValidator(0,15, this));
 
-    QGridLayout *verticalLayout = new QGridLayout();
+    QVBoxLayout *verticalLayout = new QVBoxLayout();
     QHBoxLayout *horFromToLengthLayout = new QHBoxLayout();
     horFromToLengthLayout->addWidget(minLengthLabel);
     horFromToLengthLayout->addWidget(minLengthLine);

@@ -4,19 +4,17 @@
 
 #include <QMainWindow>
 #include <QVector>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QBoxLayout>
 #include <QWidget>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include "grammar.h"
-#include "rules.h"
 #include <QDebug>
 #include <QSizePolicy>
 #include <QTextEdit>
 #include <QScrollArea>
+
+#include "grammar.h"
+#include "rules.h"
 
 class MainWindow : public QMainWindow
 {
@@ -36,19 +34,16 @@ private:
 
     Grammar *grammarWidget;
     Rules *rulesWidget;
-    QLineEdit *words;
+    QTextEdit *words;
 
     QPushButton *refreshGrammarButton;
     QPushButton *refreshRulesButton;
 
     QHBoxLayout *wholeLayout;
-    QGridLayout *leftUpLayout;
-    QGridLayout *leftDownLayout;
-    QGridLayout *rightLayout;
-    QGridLayout *leftLayout;
-
-
-
+    QVBoxLayout *leftUpLayout;
+    QVBoxLayout *leftDownLayout;
+    QVBoxLayout *rightLayout;
+    QVBoxLayout *leftLayout;
 
 public:
     MainWindow(QWidget *parent = nullptr);

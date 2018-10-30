@@ -41,7 +41,7 @@ private:
     QVector <QPushButton*> plusButtonVector;
     QVector <QRadioButton*> radioButtonVector;
 */
-    QGridLayout *wholeLayout;
+    QVBoxLayout *wholeLayout;
 
     struct SingleRule
     {
@@ -49,7 +49,7 @@ private:
         QVector <QLineEdit*> *chainsVector;
         MyPushButton* plusButton;
         QRadioButton* radioButton;
-        QGridLayout *singleRuleVLayout;
+        QVBoxLayout *singleRuleVLayout;
         QHBoxLayout *singleRuleHLayout;
         QHBoxLayout *chainLayout;
     };

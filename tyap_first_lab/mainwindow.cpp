@@ -5,16 +5,16 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setGeometry(200, 200, 800,600);
     wholeLayout = new QHBoxLayout;
-    leftUpLayout = new QGridLayout;
-    leftDownLayout = new QGridLayout;
-    leftLayout = new QGridLayout;
-    rightLayout = new QGridLayout;
+    leftUpLayout = new QVBoxLayout;
+    leftDownLayout = new QVBoxLayout;
+    leftLayout = new QVBoxLayout;
+    rightLayout = new QVBoxLayout;
     createdEarlier = false;
 
     grammarWidget = new Grammar();
     refreshGrammarButton = new QPushButton("Обновить");
 
-    words = new QLineEdit();
+    words = new QTextEdit();
 
     leftUpLayout->addWidget(grammarWidget);
     leftUpLayout->addWidget(refreshGrammarButton);
@@ -22,8 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     leftLayout->addLayout(leftUpLayout, 20);
     leftLayout->addLayout(leftDownLayout, 80);
 
-    wholeLayout->addLayout(leftLayout, 66);
-    wholeLayout->addLayout(rightLayout, 33);
+    wholeLayout->addLayout(leftLayout, 70);
+    wholeLayout->addLayout(rightLayout, 30);
     rightLayout->addWidget(words);
 
     QWidget *window = new QWidget();
@@ -71,7 +71,6 @@ void MainWindow::build()
     qDebug()<<rulesWidget->getTargetSymbolIndex()<<endl;
     auto result = chainBuilder.solve(rulesWidget->getTargetSymbolIndex(), std::make_pair(grammarWidget->getMinLength(), grammarWidget->getMaxLength()), &data);
     words->clear();
-    QString str;
     for (auto str : *result){
         words->append("\"" + QString::fromUtf8(str.c_str()) + "\" : " + QString::number(str.size()) + "\n");
     }

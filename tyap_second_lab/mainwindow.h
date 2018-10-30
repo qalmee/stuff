@@ -12,7 +12,10 @@
 #include <QPushButton>
 #include <QFrame>
 #include <QRegExpValidator>
-#include <QComboBox>
+#include "QComboBox"
+#include <QApplication>
+#include "machine.h"
+#include "resultdialog.h"
 
 class MainWindow : public QMainWindow
 {
@@ -29,7 +32,7 @@ public slots:
     void returnToDialogSlot();
     void badInputSlot();
     void checkStatesSlot();
-    void clearLayouts();
+    void runMachine();
 
 signals:
     void badInput();    
@@ -41,6 +44,7 @@ private:
     void deleteStuff();
 
     CustomDialog *dialog;
+    ResultDialog *resultDialog;
     int numberOfStates;
     int numberOfTerminals;
     QString chainString;
@@ -72,6 +76,8 @@ private:
     QRegExpValidator *regExpVal;
     QComboBox *startState;
     QComboBox *finishState;
+
+    Machine *machine;
 
 };
 

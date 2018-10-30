@@ -22,9 +22,9 @@ void Machine::setData(QVector<QString> *statesNames, QVector<QString> *terminals
     this->end = end;
 }
 
-QVector<QPair<QString, QChar> > Machine::getResult()
+QVector<QPair<QString, QChar> > *Machine::getResult()
 {
-    return this->result;
+    return &this->result;
 }
 
 int Machine::getError()
@@ -65,6 +65,7 @@ void Machine::run()
     result.push_back({currentState, '\0'});
     if (currentState != statesNames->at(end)){
         error = Machine::NotInTheFinishState;
+        return;
     }
     error = Machine::isOk;
 }

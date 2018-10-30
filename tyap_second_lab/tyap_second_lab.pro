@@ -29,12 +29,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     customdialog.cpp \
-    machine.cpp
+    machine.cpp \
+    resultdialog.cpp
 
 HEADERS += \
         mainwindow.h \
     customdialog.h \
-    machine.h
+    machine.h \
+    resultdialog.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

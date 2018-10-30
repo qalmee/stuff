@@ -13,7 +13,7 @@ class Machine : private QObject
 public:
     Machine();
     Machine(QVector <QString> *statesNames, QVector <QString> *terminals, QVector <QVector<QString>> *statesValues, int start, const int end);
-    QVector <QPair<QString, QChar>> getResult();
+    QVector<QPair<QString, QChar> > *getResult();
     int getError();
     void setChain(const QString &chain);
     void setData(QVector<QString> *statesNames, QVector<QString> *terminals, QVector<QVector<QString> > *statesValues, int start, int end);

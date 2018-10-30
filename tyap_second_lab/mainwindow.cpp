@@ -2,8 +2,6 @@
 #include <QDebug>
 #include <QSet>
 #include <QMessageBox>
-#include <QStyle>
-
 
 MainWindow::MainWindow(QApplication *a, QWidget *parent) :
     QMainWindow(parent), app(a)
@@ -22,9 +20,13 @@ MainWindow::MainWindow(QApplication *a, QWidget *parent) :
     QLabel *statesAlphabetlabel = new QLabel("Состояния\\Алфавит");
     tableLayout->addWidget(statesAlphabetlabel, 0, 0);
 
+    resultDialog = new ResultDialog();
+    //resultDialog->show();
+
+    machine = new Machine();
+
     QObject::connect(dialog, &CustomDialog::finished, this, &MainWindow::okDialog);
     QObject::connect(dialog, &CustomDialog::canceled, this, &MainWindow::cancelDialog);
-
 }
 
 MainWindow::~MainWindow()
@@ -33,7 +35,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::cancelDialog()
 {
-    //this->app->
+    app->exit();
 }
 
 void MainWindow::okDialog(int numberOfStates, int numberOfTerminals)
@@ -82,8 +84,13 @@ void MainWindow::checkChainSlot()
             }
             statesValues[i].push_back(statesValuesLines[i][j]->text());
         }
-    }
+    }    
     chainString = chainLine->text();
+    if (chainString == ""){
+        this->badInputSlot();
+        return;
+    }
+    this->runMachine();
 }
 
 void MainWindow::badInputSlot()
@@ -199,7 +206,6 @@ void MainWindow::constructStuff()
 
 void MainWindow::deleteStuff()
 {
-
     delete startStateLabel;
     delete finishStateLabel;
     delete startState;
@@ -257,21 +263,29 @@ void MainWindow::checkStatesSlot()
     }
 }
 
-void MainWindow::clearLayouts()
+void MainWindow::runMachine()
 {
-//    for (auto &x : statesLines)
-//        delete x;
-//    for (auto &x : terminalsLines)
-//        delete x;
-//    statesLines.clear();
-//    terminalsLines.clear();
-//    for (auto &v : statesValuesLines){
-//        for (auto &x : v){
-//            delete x;
-//        }
-//    }
-//    statesValuesLines.clear();
-
+    machine->setChain(chainString);
+    machine->setData(&statesNames, &terminals, &statesValues,
+                     statesNames.indexOf(startState->currentText()), statesNames.indexOf(finishState->currentText()));
+    machine->run();
+    int error = machine->getError();
+    auto result = machine->getResult();
+    QString message;
+    switch (error) {
+    case Machine::EndWasNotReached:
+        message = "Цепочка не подходит"; //???
+        break;
+    case Machine::NotInTheFinishState:
+        message = "Конечное состояние автомата не было достигнуто";
+        break;
+    case Machine::SymbolDoesNotExistInAlphabet:
+        message = "В цепочке присутсвует символ не из алфавита";
+        break;
+    case Machine::isOk:
+        message = "Цепочка подходит";
+        break;
+    }
+    resultDialog->setInformation(message, result, chainString);
+    resultDialog->show();
 }
-
-//reconstruct all!

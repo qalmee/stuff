@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QDebug>
 #include <QSet>
 #include <QMessageBox>
@@ -23,38 +22,9 @@ MainWindow::MainWindow(QApplication *a, QWidget *parent) :
     QLabel *statesAlphabetlabel = new QLabel("Состояния\\Алфавит");
     tableLayout->addWidget(statesAlphabetlabel, 0, 0);
 
-    lineV = new QFrame;
-    lineV->setFrameShape(QFrame::VLine);
-    lineV->setFrameShadow(QFrame::Sunken);
-    lineH = new QFrame;
-    lineH->setFrameShape(QFrame::HLine);
-    lineH->setFrameShadow(QFrame::Sunken);
-    secondLineH = new QFrame;
-    secondLineH->setFrameShape(QFrame::HLine);
-    secondLineH->setFrameShadow(QFrame::Plain);
-    secondLineH->setLineWidth(2);
-    secondLineH->setMaximumWidth(200);
-
-    chainLabel = new QLabel ("Введите цепочку:");
-    chainLabel->setMaximumWidth(200);
-    chainLine = new QLineEdit();
-    chainLine->setMaximumWidth(200);
-    checkChainButton = new QPushButton ("Проверить цепочку");
-    checkChainButton->setMaximumWidth(200);
-    chainLayout = new QVBoxLayout;
-    returnToDialogButton = new QPushButton("Вернуться к условию");
-    returnToDialogButton->setMaximumWidth(200);
-
-    chainLayout->addWidget(chainLabel);
-    chainLayout->addWidget(chainLine);
-    chainLayout->addWidget(checkChainButton);
-    chainLayout->addWidget(secondLineH);
-    chainLayout->addWidget(returnToDialogButton);
-
     QObject::connect(dialog, &CustomDialog::finished, this, &MainWindow::okDialog);
     QObject::connect(dialog, &CustomDialog::canceled, this, &MainWindow::cancelDialog);
-    QObject::connect(checkChainButton, &QPushButton::clicked, this, &MainWindow::checkChainSlot);
-    QObject::connect(returnToDialogButton, &QPushButton::clicked, this, &MainWindow::returnToDialogSlot);
+
 }
 
 MainWindow::~MainWindow()
@@ -63,7 +33,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::cancelDialog()
 {
-    app->quit();
+    //this->app->
 }
 
 void MainWindow::okDialog(int numberOfStates, int numberOfTerminals)
@@ -72,12 +42,16 @@ void MainWindow::okDialog(int numberOfStates, int numberOfTerminals)
     this->numberOfTerminals = numberOfTerminals;
     this->dialog->hide();
     this->dialog->clear();
+    this->constructStuff();
     this->prepareView();
     this->show();
 }
 
 void MainWindow::checkChainSlot()
 {
+    terminals.clear();
+    statesNames.clear();
+    statesValues.clear();
     QSet<QString> terminalsSet, statesNamesSet;
     for (int i = 0; i < numberOfTerminals; ++i)
     {
@@ -121,22 +95,17 @@ void MainWindow::returnToDialogSlot()
 {
     this->hide();
     dialog->show();
+    this->deleteStuff();
+    qDebug()<<window->minimumSize();
+    this->setMinimumSize(window->minimumSize());
+    qDebug()<<this->minimumSize();
+    window->resize(QSize(100, 100));
+    this->resize(QSize(110, 110));
 }
 
 void MainWindow::prepareView()
 {
-    for (auto &x : statesLines)
-        delete x;
-    for (auto &x : terminalsLines)
-        delete x;
-    statesLines.clear();
-    terminalsLines.clear();
-    for (auto &v : statesValuesLines){
-        for (auto &x : v){
-            delete x;
-        }
-    }
-    statesValuesLines.clear();
+
     statesLines.reserve(numberOfStates);
 
     for (int i = 0; i < numberOfStates ; ++i)
@@ -145,6 +114,8 @@ void MainWindow::prepareView()
         temp->setMaximumWidth(150);
         statesLines.push_back(temp);
         tableLayout->addWidget(temp, i + 2, 0);
+        QObject::connect(temp, &QLineEdit::textChanged, this, &MainWindow::checkStatesSlot);
+
     }
 
     terminalsLines.reserve(numberOfTerminals);
@@ -160,7 +131,7 @@ void MainWindow::prepareView()
     statesValuesLines.reserve(numberOfStates);
     for (int i = 0; i < numberOfStates; ++i)
     {
-        statesValuesLines.push_back(QVector<QLineEdit*>(numberOfTerminals));
+        statesValuesLines.push_back(QVector<QLineEdit*>());
         for (int j = 0; j < numberOfTerminals; ++j)
         {
             QLineEdit *temp = new QLineEdit();
@@ -169,9 +140,138 @@ void MainWindow::prepareView()
             tableLayout->addWidget(temp, i + 2, j + 2);
         }
     }
-    statesValuesLines[0][0]->style();
+
+    tableLayout->addWidget(startStateLabel, numberOfStates + 3, 0);
+    tableLayout->addWidget(startState, numberOfStates + 4, 0);
+    tableLayout->addWidget(finishStateLabel, numberOfStates + 5, 0);
+    tableLayout->addWidget(finishState, numberOfStates + 6, 0);
+
+    tableLayout->addWidget(chainLabel, numberOfStates + 3, 2, 1, numberOfTerminals + 1);
+    tableLayout->addWidget(chainLine, numberOfStates + 4, 2, 1, numberOfTerminals + 1);
+    tableLayout->addWidget(checkChainButton, numberOfStates + 5, 2, 1, numberOfTerminals + 1);
+    tableLayout->addWidget(secondLineV, numberOfStates + 2, 1, 6, 1);
+    tableLayout->addWidget(secondLineH, numberOfStates + 6, 1, 1, numberOfTerminals + 1);
+    tableLayout->addWidget(thirdLineH, numberOfStates + 2, 0, 1, numberOfTerminals+2);
+    tableLayout->addWidget(returnToDialogButton, numberOfStates + 7, 2, 1, numberOfTerminals);
 
     tableLayout->addWidget(lineH, 1, 0, 1, numberOfTerminals + 2);
     tableLayout->addWidget(lineV, 0, 1, numberOfStates + 2, 1);
-    tableLayout->addLayout(chainLayout, numberOfStates + 3, 1, 3, numberOfTerminals + 1);
 }
+
+void MainWindow::constructStuff()
+{
+
+    lineV = new QFrame;
+    lineV->setFrameShape(QFrame::VLine);
+    lineV->setFrameShadow(QFrame::Sunken);
+    lineH = new QFrame;
+    lineH->setFrameShape(QFrame::HLine);
+    lineH->setFrameShadow(QFrame::Sunken);
+    secondLineH = new QFrame;
+    secondLineH->setFrameShape(QFrame::HLine);
+    secondLineH->setFrameShadow(QFrame::Sunken);
+    secondLineH->setLineWidth(2);
+
+    secondLineV = new QFrame;
+    secondLineV->setFrameShape(QFrame::VLine);
+    secondLineV->setFrameShadow(QFrame::Sunken);
+    secondLineV->setLineWidth(2);
+
+    thirdLineH = new QFrame;
+    thirdLineH->setFrameShape(QFrame::HLine);
+    thirdLineH->setFrameShadow(QFrame::Plain);
+    thirdLineH->setLineWidth(2);
+
+    chainLabel = new QLabel ("Введите цепочку:");
+    chainLine = new QLineEdit();
+    checkChainButton = new QPushButton ("Проверить цепочку");
+    returnToDialogButton = new QPushButton("Вернуться к условию");
+
+    startStateLabel = new QLabel("Начальное состояние:");
+    finishStateLabel = new QLabel("Конечное состояние:");
+    startState = new QComboBox();
+    finishState = new QComboBox();
+
+    QObject::connect(checkChainButton, &QPushButton::clicked, this, &MainWindow::checkChainSlot);
+    QObject::connect(returnToDialogButton, &QPushButton::clicked, this, &MainWindow::returnToDialogSlot);
+
+}
+
+void MainWindow::deleteStuff()
+{
+
+    delete startStateLabel;
+    delete finishStateLabel;
+    delete startState;
+    delete finishState;
+
+    delete lineV;
+    delete lineH;
+    delete secondLineH;
+    delete secondLineV;
+    delete thirdLineH;
+    delete chainLabel;
+    delete chainLine;
+    delete checkChainButton;
+    delete returnToDialogButton;
+
+    for (auto &x : statesLines)
+        delete x;
+    for (auto &x : terminalsLines)
+        delete x;
+    statesLines.clear();
+    terminalsLines.clear();
+    for (auto &v : statesValuesLines){
+        for (auto &x : v){
+            delete x;
+        }
+    }
+    statesValuesLines.clear();
+}
+
+void MainWindow::checkStatesSlot()
+{
+    bool allEntered = true;
+    for (int i = 0; i < numberOfStates; ++i)
+    {
+        if(statesLines[i]->text().isEmpty())
+        {
+            allEntered = false;
+            break;
+        }
+    }
+    if (allEntered)
+    {
+        startState->clear();
+        finishState->clear();
+        for (int i = 0; i < numberOfStates; ++i)
+        {
+            startState->addItem(statesLines[i]->text());
+            finishState->addItem(statesLines[i]->text());
+        }
+
+        startStateLabel->show();
+        startState->show();
+        finishStateLabel->show();
+        finishState->show();
+    }
+}
+
+void MainWindow::clearLayouts()
+{
+//    for (auto &x : statesLines)
+//        delete x;
+//    for (auto &x : terminalsLines)
+//        delete x;
+//    statesLines.clear();
+//    terminalsLines.clear();
+//    for (auto &v : statesValuesLines){
+//        for (auto &x : v){
+//            delete x;
+//        }
+//    }
+//    statesValuesLines.clear();
+
+}
+
+//reconstruct all!

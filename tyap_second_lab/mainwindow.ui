@@ -20,7 +20,11 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
+<<<<<<< HEAD
      <height>25</height>
+=======
+     <height>21</height>
+>>>>>>> 768bdee673c1755af9dcd4986b0e39a721ecf365
     </rect>
    </property>
   </widget>

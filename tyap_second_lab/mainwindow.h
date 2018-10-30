@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QFrame>
 #include <QRegExpValidator>
+#include <QComboBox>
 
 class MainWindow : public QMainWindow
 {
@@ -27,6 +28,8 @@ public slots:
     void checkChainSlot();
     void returnToDialogSlot();
     void badInputSlot();
+    void checkStatesSlot();
+    void clearLayouts();
 
 signals:
     void badInput();    
@@ -34,6 +37,9 @@ signals:
 private:
 
     void prepareView();
+    void constructStuff();
+    void deleteStuff();
+
     CustomDialog *dialog;
     int numberOfStates;
     int numberOfTerminals;
@@ -43,8 +49,6 @@ private:
     QVector <QString> terminals;
     QVector <QVector<QString>> statesValues;
 
-    QVBoxLayout *wholeLayout;
-    QVBoxLayout *chainLayout;
     QGridLayout *tableLayout;
 
     QVector <QLineEdit*> terminalsLines;
@@ -56,14 +60,18 @@ private:
 
     QWidget *window;
     QLabel *chainLabel;
+    QLabel *startStateLabel;
+    QLabel *finishStateLabel;
 
-    QFrame *lineV, *lineH, *secondLineH;
+    QFrame *lineV, *lineH, *secondLineH, *secondLineV, *thirdLineH;
 
     QApplication *app;
     QLineEdit *chainLine;
 
     QRegExp *regExp;
     QRegExpValidator *regExpVal;
+    QComboBox *startState;
+    QComboBox *finishState;
 
 };
 

@@ -12,6 +12,8 @@
 #include <QPushButton>
 #include <QFrame>
 #include <QRegExpValidator>
+#include <QCheckBox>
+#include <QStandardItemModel>
 #include "QComboBox"
 #include <QApplication>
 #include "machine.h"
@@ -33,6 +35,7 @@ public slots:
     void badInputSlot();
     void checkStatesSlot();
     void runMachine();
+    void finishStateComboBoxSelected(int index);
 
 signals:
     void badInput();    
@@ -58,6 +61,8 @@ private:
     QVector <QLineEdit*> terminalsLines;
     QVector <QLineEdit*> statesLines;
     QVector <QVector <QLineEdit*>> statesValuesLines;
+    QVector <QCheckBox*> finishStateCheckBoxes;
+
 
     QPushButton *checkChainButton;
     QPushButton *returnToDialogButton;
@@ -76,6 +81,8 @@ private:
     QRegExpValidator *regExpVal;
     QComboBox *startState;
     QComboBox *finishState;
+
+    QStandardItemModel * modelComboBox;
 
     Machine *machine;
 

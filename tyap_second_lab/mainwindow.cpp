@@ -87,10 +87,6 @@ void MainWindow::checkChainSlot()
         }
     }    
     chainString = chainLine->text();
-    if (chainString == ""){
-        this->badInputSlot();
-        return;
-    }
     this->runMachine();
 }
 

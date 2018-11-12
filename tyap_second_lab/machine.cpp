@@ -7,19 +7,20 @@ Machine::Machine()
 }
 
 Machine::Machine(QVector<QString> *statesNames, QVector<QString> *terminals,
-                 QVector<QVector<QString> > *statesValues, const int start, const int end):
-    start(start), end(end), statesNames(statesNames), terminals(terminals), statesValues(statesValues)
+                 QVector<QVector<QString> > *statesValues, const int start, QVector<bool> &finishStates):
+    start(start), finishStates(finishStates), statesNames(statesNames), terminals(terminals), statesValues(statesValues)
 {
 
 }
 
-void Machine::setData(QVector<QString> *statesNames, QVector<QString> *terminals, QVector<QVector<QString> > *statesValues, int start, int end)
+void Machine::setData(QVector<QString> *statesNames, QVector<QString> *terminals,
+                      QVector<QVector<QString> > *statesValues, int start, QVector<bool> &finishStates)
 {
     this->statesNames = statesNames;
     this->statesValues = statesValues;
     this->terminals = terminals;
     this->start = start;
-    this->end = end;
+    this->finishStates = finishStates;
 }
 
 QVector<QPair<QString, QChar> > *Machine::getResult()
@@ -63,7 +64,7 @@ void Machine::run()
         currentState = m[currentState][ch];
     }
     result.push_back({currentState, '\0'});
-    if (currentState != statesNames->at(end)){
+    if (!finishStates[statesNames->indexOf(currentState)]){
         error = Machine::NotInTheFinishState;
         return;
     }

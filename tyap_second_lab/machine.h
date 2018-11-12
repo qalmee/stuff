@@ -12,11 +12,11 @@ class Machine : private QObject
     Q_OBJECT
 public:
     Machine();
-    Machine(QVector <QString> *statesNames, QVector <QString> *terminals, QVector <QVector<QString>> *statesValues, int start, const int end);
+    Machine(QVector <QString> *statesNames, QVector <QString> *terminals, QVector <QVector<QString>> *statesValues, int start, QVector<bool> &finishStates);
     QVector<QPair<QString, QChar> > *getResult();
     int getError();
     void setChain(const QString &chain);
-    void setData(QVector<QString> *statesNames, QVector<QString> *terminals, QVector<QVector<QString> > *statesValues, int start, int end);
+    void setData(QVector<QString> *statesNames, QVector<QString> *terminals, QVector<QVector<QString> > *statesValues, int start, QVector<bool> &finishStates);
     enum Errors{
         isOk,
         EndWasNotReached,
@@ -31,7 +31,8 @@ public slots:
 private:
     QString currentState;
     QString chain;
-    int start, end;
+    int start;
+    QVector<bool> finishStates;
     int error = 0;
     QVector <QPair<QString, QChar>> result;
     QVector <QString> *statesNames = nullptr;

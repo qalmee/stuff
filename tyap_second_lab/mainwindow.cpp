@@ -279,9 +279,13 @@ void MainWindow::checkStatesSlot()
 
 void MainWindow::runMachine()
 {
+    QVector<bool> finishMask(numberOfStates);
+    for (int i = 0; i<numberOfStates; i++){
+        finishMask[i] = (modelComboBox->item(i)->checkState() == Qt::Checked);
+    }
     machine->setChain(chainString);
     machine->setData(&statesNames, &terminals, &statesValues,
-                     statesNames.indexOf(startState->currentText()), statesNames.indexOf(finishState->currentText()));
+                     statesNames.indexOf(startState->currentText()), finishMask);
     machine->run();
     int error = machine->getError();
     auto result = machine->getResult();

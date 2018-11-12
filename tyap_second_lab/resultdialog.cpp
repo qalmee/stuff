@@ -11,7 +11,9 @@ void ResultDialog::setInformation(QString message, QVector<QPair<QString, QChar>
     this->resultMessage->setText(message);
     this->result->clear();
     for (auto x : *result){
-        this->result->append(x.first + " (" + QString(1, x.second) + ") ->");
+        if (x.first.isEmpty()) break;
+        this->result->append(x.first + " (" + chain + ") ->");
+        chain.remove(0, 1);
     }
 }
 

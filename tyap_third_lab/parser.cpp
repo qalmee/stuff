@@ -1,4 +1,5 @@
 #include "parser.h"
+#include <QDebug>
 
 Parser::Parser()
 {
@@ -47,12 +48,20 @@ void Parser::parseStackAlphabet(const QString &stackAlphabet)
 
 void Parser::parseMachineRules(const QString &machineRules)
 {
-
+    int i = 1;
+    for (auto str : machineRules.split("\n", QString::SkipEmptyParts))
+    {
+        parseSingleMachineRule(str);
+        i++;
+    }
 }
 
 void Parser::parseSingleMachineRule(const QString &singleRule)
 {
     QString currentState;
+    QString stackTop;
+    QString newStackTop;
+    QString newState;
     QChar t;
     int i = 0;
 
@@ -65,15 +74,38 @@ void Parser::parseSingleMachineRule(const QString &singleRule)
     while (singleRule[i] == ' ') i++;
     while (singleRule[i] != ',')
     {
-        currentState+=singleRule[i];
+        currentState += singleRule[i];
         i++;
     }
     while (singleRule[i] == ' ') i++;
     t = singleRule[i];
     i++;
-    while (singleRule[i] == )
+    while (singleRule[i] != ',') i++;
+    while (singleRule[i] == ' ') i++;
+    while ( (singleRule[i] != ' ') || (singleRule[i] != ')') )
+    {
+        stackTop += singleRule[i];
+        i++;
+    }
+    while (singleRule != '(') i++;
+    while (singleRule != ',')
+    {
+        newState += singleRule[i];
+        i++;
+    }
+    while (singleRule == ' ') i++;
+    while (singleRule != ')')
+    {
+        newStackTop += singleRule[i];
+        i++;
+    }
 
+    if (newStackTop == '&') newStackTop = "";
 
+    qDebug() << "currentState " << currentState << " t " << t << " stackTop " << stackTop << " newState " << newState << " newStackTop "    <<newStackTop;
+
+    Condition temp(t, stackTop, newState, newStackTop);
+    map[currentState].push_back(temp);
 }
 
 const QVector<QString> *Parser::getStates() const

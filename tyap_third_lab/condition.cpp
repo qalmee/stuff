@@ -5,6 +5,11 @@ Condition::Condition()
 
 }
 
+Condition::Condition(QChar t, QString stackTop, QString newStackTop, QString nextState) : t(t), stackTop(stackTop), newStackTop(newStackTop), nextState(nextState)
+{
+
+}
+
 QChar Condition::getT() const
 {
     return t;

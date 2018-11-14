@@ -30,6 +30,8 @@ public:
     void setStack(const QString &value);
     void setChain(const QString &value);
 
+    const QMap<QString, QVector<Condition> > *getMap() const;
+
 private:
     QVector <QString> states;
     QVector <QString> finishStates;

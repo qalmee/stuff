@@ -1,10 +1,8 @@
 #include "machine.h"
 #include <stdexcept>
 
-Machine::Machine(const QString &chain, const QString &stack, const QString &startState, const QChar emptySymbol) :
-    chain(chain), stack(stack), emptySymbol(emptySymbol), startState(startState)
+Machine::Machine(const QMap<QString, QVector<Condition> > *map) : m(map)
 {
-
 }
 
 void Machine::run()
@@ -13,7 +11,7 @@ void Machine::run()
     for (int i = 0; i<chain.size(); i++){
         ans.push_back({currentState, stack});
         bool flag = false;
-        for (auto con : this->m->take(currentState)){
+        for (auto con : this->m->value(currentState)){
             if ((con.getT() == chain[i] || con.getT() == emptySymbol) && stack.startsWith(con.getStackTop())){
                 flag = true;
                 currentState = con.getNextState();
@@ -91,7 +89,7 @@ QVector<QChar> *Machine::getStackAlphabet() const
     return stackAlphabet;
 }
 
-QMap<QString, QVector<Condition> > *Machine::getMap() const
+const QMap<QString, QVector<Condition> > *Machine::getMap() const
 {
     return m;
 }
@@ -100,4 +98,9 @@ const QVector<Machine::tact> *Machine::getAns() const
 {
     return &this->ans;
 
+}
+
+void Machine::setMap(QMap<QString, QVector<Condition> > *value)
+{
+    m = value;
 }

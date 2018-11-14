@@ -9,7 +9,7 @@
 class Machine
 {
 public:
-    Machine(const QString &chain, const QString &stack, const QString &startState, const QChar emptySymbol);
+    Machine(const QMap<QString, QVector<Condition> > *map);
 
     void run();
 
@@ -33,13 +33,15 @@ public:
 
     QVector<QChar> *getStackAlphabet() const;
 
-    QMap<QString, QVector<Condition> > *getMap() const;
+    const QMap<QString, QVector<Condition> > *getMap() const;
 
     struct tact{
         QString state, stack;
     };
 
     const QVector <tact> *getAns() const;
+
+    void setMap(QMap<QString, QVector<Condition> > *value);
 
 private:
     QString chain;
@@ -50,7 +52,7 @@ private:
     QVector <QString> *finishStates;
     QVector <QChar> *inputAlphabet;
     QVector <QChar> *stackAlphabet;
-    QMap<QString, QVector<Condition>> *m;
+    const QMap<QString, QVector<Condition>> * m;
     QVector <tact> ans;
 };
 

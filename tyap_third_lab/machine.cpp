@@ -1,13 +1,32 @@
 #include "machine.h"
+#include <stdexcept>
 
-Machine::Machine()
+Machine::Machine(const QString &chain, const QString &stack, const QString &startState, const QChar emptySymbol) :
+    chain(chain), stack(stack), emptySymbol(emptySymbol), startState(startState)
 {
 
 }
 
 void Machine::run()
 {
-
+    QString currentState = this->startState;
+    for (int i = 0; i<chain.size(); i++){
+        bool flag = false;
+        for (auto con : this->m->take(currentState)){
+            if ((con.getT() == chain[i] || con.getT() == emptySymbol) && stack.startsWith(con.getStackTop())){
+                flag = true;
+                currentState = con.getNextState();
+                stack.replace(0, con.getStackTop().size(), con.getNewStackTop());
+                break;
+            }
+        }
+        if (!flag){
+            throw new std::runtime_error("Конец цепочки не был достигнут");
+        }
+    }
+    if (!finishStates->contains(currentState)){
+        throw  new std::runtime_error("Конечное состояние автомата не было достигнуто");
+    }
 }
 
 QString Machine::getChain() const
@@ -55,19 +74,9 @@ QVector<QString> *Machine::getStates() const
     return states;
 }
 
-void Machine::setStates(QVector<QString> *value)
-{
-    states = value;
-}
-
 QVector<QString> *Machine::getFinishStates() const
 {
     return finishStates;
-}
-
-void Machine::setFinishStates(QVector<QString> *value)
-{
-    finishStates = value;
 }
 
 QVector<QChar> *Machine::getInputAlphabet() const
@@ -75,27 +84,12 @@ QVector<QChar> *Machine::getInputAlphabet() const
     return inputAlphabet;
 }
 
-void Machine::setInputAlphabet(QVector<QChar> *value)
-{
-    inputAlphabet = value;
-}
-
 QVector<QChar> *Machine::getStackAlphabet() const
 {
     return stackAlphabet;
 }
 
-void Machine::setStackAlphabet(QVector<QChar> *value)
-{
-    stackAlphabet = value;
-}
-
 QMap<QString, QVector<Condition> > *Machine::getMap() const
 {
     return m;
-}
-
-void Machine::setMap(QMap<QString, QVector<Condition> > *value)
-{
-    m = value;
 }

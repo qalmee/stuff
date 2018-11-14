@@ -29,13 +29,13 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     parser.cpp \
-    machine.cpp
+    machine.cpp \
     condition.cpp
 
 HEADERS += \
         mainwindow.h \
     parser.h \
-    machine.h
+    machine.h \
     condition.h
 
 # Default rules for deployment.

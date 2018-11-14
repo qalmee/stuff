@@ -71,7 +71,7 @@ void Parser::parseSingleMachineRule(const QString &singleRule)
     while (singleRule[i] == ' ') i++;
     t = singleRule[i];
     i++;
-    while (singleRule[i] == )
+    //while (singleRule[i] == )
 
 
 }

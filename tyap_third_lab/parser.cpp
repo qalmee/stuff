@@ -161,6 +161,7 @@ void Parser::parseSingleMachineRule(int number, const QString &singleRule)
             qDebug ()<< "problem new Stack top";
         }
     }
+
     if (i > singleRule.size()){
         throw new std::runtime_error("Something is wrong with rule number" + QString::number(number).toStdString());
     }

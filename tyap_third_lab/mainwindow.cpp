@@ -80,6 +80,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::checkChainSlot()
 {
+    this->outputTextEdit->clear();
     try {
         parser->parseStates(statesLine->text());
         parser->parseFinishStates(finishStatesLine->text());
@@ -99,6 +100,7 @@ void MainWindow::checkChainSlot()
     machine.setStack(this->startStackLine->text());
     machine.setStartState(this->startStateLine->text());
     machine.setEmptySymbol(this->emptySymbolLine->text().at(0));
+    machine.setFinishStates(parser->getFinishStates());
 
     try {
         machine.run();
@@ -108,7 +110,7 @@ void MainWindow::checkChainSlot()
 
     QString chain = chainLine->text();
     for (auto x : *machine.getAns()){
-        this->outputTextEdit->append(x.state + ", " + chain + "|"+ x.stack);
+        this->outputTextEdit->append("(" + x.state + ", " + chain + "|"+ x.stack + ")");
         chain.remove(0, 1);
     }
 

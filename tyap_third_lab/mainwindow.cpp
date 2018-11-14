@@ -86,4 +86,5 @@ void MainWindow::checkChainSlot()
     parser->setEmptySymbol(emptySymbolLine->text().at(0));
     parser->setStack(startStackLine->text());
     parser->setChain(chainLine->text());
+    parser->parseMachineRules(machineTextEdit->toPlainText());
 }

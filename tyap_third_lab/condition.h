@@ -7,7 +7,7 @@ class Condition
 {
 public:
     Condition();
-
+    Condition(QChar t, QString stackTop, QString newStackTop, QString nextState);
     QChar getT() const;
     QString getNextState() const;
     QString getStackTop() const;

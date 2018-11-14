@@ -162,13 +162,16 @@ void Parser::parseSingleMachineRule(int number, const QString &singleRule)
     if (!inputAlphabet.contains(t) && t != emptySymbol){
         throw new std::runtime_error("Something is wrong with rule number " + QString::number(number).toStdString());
     }
+    if (!states.contains(startState)){
+        throw new std::runtime_error("Неизвестное начальное состояние");
+    }
 
     if (i > singleRule.size()){
         throw new std::runtime_error("Something is wrong with rule number" + QString::number(number).toStdString());
     }
     if (newStackTop == emptySymbol) newStackTop = "";
 
-    qDebug() << "currentState " << currentState << " t " << t << " stackTop " << stackTop << " newState " << newState << " newStackTop "    <<newStackTop;
+    //qDebug() << "currentState " << currentState << " t " << t << " stackTop " << stackTop << " newState " << newState << " newStackTop "    <<newStackTop;
 
     Condition temp(t, stackTop, newState, newStackTop, i);
     map[currentState].push_back(temp);
@@ -217,6 +220,16 @@ void Parser::setChain(const QString &value)
 const QMap<QString, QVector<Condition> > *Parser::getMap() const
 {
     return &map;
+}
+
+QString Parser::getStartState() const
+{
+    return startState;
+}
+
+void Parser::setStartState(const QString &value)
+{
+    startState = value;
 }
 
 QString Parser::getStack() const

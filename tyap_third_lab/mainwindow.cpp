@@ -69,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
     window->setLayout(wholeLayout);
 
     parser = new Parser;
+    machine = new Machine();
 
     QObject::connect(checkChainButton, &QPushButton::clicked, this,  &MainWindow::checkChainSlot);
 }
@@ -87,4 +88,11 @@ void MainWindow::checkChainSlot()
     parser->setStack(startStackLine->text());
     parser->setChain(chainLine->text());
     parser->parseMachineRules(machineTextEdit->toPlainText());
+
+    machine->setChain(this->chainLine->text());
+    machine->setStack(this->startStackLine->text());
+    machine->setStartState(this->startStateLine->text());
+    machine->setEmptySymbol(this->emptySymbolLine->text().at(0));
+    machine->setMap(parser->getMap());
+
 }

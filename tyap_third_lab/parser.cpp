@@ -100,27 +100,29 @@ void Parser::parseSingleMachineRule(int number, const QString &singleRule)
         newStackTop += singleRule[i++];
     }
 
-    for (int i = 0; i < stackTop.size(); ++i)
+    for (auto ch : stackTop)
     {
-        bool flag = false;
-        for (auto j : stackAlphabet)
-            if (stackTop[i] == j) flag = true;
-        if (flag) flag = false;
-        else {
-            qDebug ()<< "problem stack top";
+        if (!stackAlphabet.contains(ch)){
+            throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
         }
     }
 
-    for (int i = 0; i < newStackTop.size(); ++i)
+    for (auto ch : newStackTop)
     {
-        bool flag = false;
-        for (auto j : stackAlphabet)
-            if (newStackTop[i] == j) flag = true;
-        if (flag) flag = false;
-        else {
-            qDebug ()<< "problem new Stack top";
+        if (!stackAlphabet.contains(ch)){
+            throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
         }
     }
+    if (!states.contains(newState)){
+        throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
+    }
+    if (!states.contains(currentState)){
+        throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
+    }
+    if (!inputAlphabet.contains(t)){
+        throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
+    }
+
     if (i > singleRule.size()){
         throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
     }
@@ -170,6 +172,11 @@ QString Parser::getChain() const
 void Parser::setChain(const QString &value)
 {
     chain = value;
+}
+
+const QMap<QString, QVector<Condition> > *Parser::getMap() const
+{
+    return &map;
 }
 
 QString Parser::getStack() const

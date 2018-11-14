@@ -10,6 +10,7 @@
 #include <QGridLayout>
 #include <QPushButton>
 #include "parser.h"
+#include "machine.h"
 
 class MainWindow : public QMainWindow
 {
@@ -54,6 +55,7 @@ private:
     QVBoxLayout *wholeLayout;
 
     Parser *parser;
+    Machine *machine;
 
     QWidget *window;
 };

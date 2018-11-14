@@ -4,6 +4,8 @@
 #include <QVector>
 #include <QString>
 #include <QSet>
+#include <QMap>
+#include "condition.h"
 
 class Parser
 {
@@ -13,6 +15,9 @@ public:
     void parseFinishStates(const QString &finishStates);
     void parseInputAlphabet(const QString &inputAlphabet);
     void parseStackAlphabet(const QString &stackAlphabet);
+    void parseMachineRules(const QString &machineRules);
+    void parseSingleMachineRule(const QString &singleRule);
+
     const QVector<QString> *getStates() const;
     const QVector<QString> *getFinishStates() const;
     const QVector<QChar>* getInputAlphabet() const;
@@ -33,7 +38,7 @@ private:
     QString chain;
     QString stack;
     QChar emptySymbol;
-
+    QMap <QString, QVector<Condition>> map;
 };
 
 #endif // PARSER_H

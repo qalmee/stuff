@@ -28,11 +28,13 @@ QMAKE_CXXFLAGS += /std:c++17
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    parser.cpp
+    parser.cpp \
+    condition.cpp
 
 HEADERS += \
         mainwindow.h \
-    parser.h
+    parser.h \
+    condition.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

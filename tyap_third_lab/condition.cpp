@@ -52,3 +52,13 @@ void Condition::setNextState(const QString &value)
     nextState = value;
 }
 
+int Condition::getNumber() const
+{
+    return number;
+}
+
+void Condition::setNumber(int value)
+{
+    number = value;
+}
+

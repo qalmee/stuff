@@ -1,4 +1,5 @@
 #include "parser.h"
+#include <stdexcept>
 
 Parser::Parser()
 {
@@ -26,11 +27,10 @@ void Parser::parseInputAlphabet(const QString &inputAlphabet)
     auto list = inputAlphabet.split(" ", QString::SkipEmptyParts);
     for (auto str : list){
         if (str.size() != 1){
-            //ойойо
+            throw new std::runtime_error("Something wrong about your alphabet");
         }
         this->inputAlphabet.push_back(str[0]);
     }
-
 }
 
 void Parser::parseStackAlphabet(const QString &stackAlphabet)
@@ -38,7 +38,7 @@ void Parser::parseStackAlphabet(const QString &stackAlphabet)
     auto list = stackAlphabet.split(" ", QString::SkipEmptyParts);
     for (auto str : list){
         if (str.size() != 1){
-            //ойойо
+            throw new std::runtime_error("Something wrong about your stack alphabet");
         }
         this->stackAlphabet.push_back(str[0]);
     }

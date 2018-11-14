@@ -35,6 +35,12 @@ public:
 
     QMap<QString, QVector<Condition> > *getMap() const;
 
+    struct tact{
+        QString state, stack;
+    };
+
+    const QVector <tact> *getAns() const;
+
 private:
     QString chain;
     QString stack;
@@ -45,6 +51,7 @@ private:
     QVector <QChar> *inputAlphabet;
     QVector <QChar> *stackAlphabet;
     QMap<QString, QVector<Condition>> *m;
+    QVector <tact> ans;
 };
 
 #endif // MACHINE_H

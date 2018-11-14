@@ -1,6 +1,7 @@
 #include "parser.h"
 #include <stdexcept>
 #include <QDebug>
+#include <any>
 
 Parser::Parser()
 {
@@ -51,12 +52,11 @@ void Parser::parseMachineRules(const QString &machineRules)
     int i = 1;
     for (auto str : machineRules.split("\n", QString::SkipEmptyParts))
     {
-        parseSingleMachineRule(str);
-        i++;
+        parseSingleMachineRule(i++, str);
     }
 }
 
-void Parser::parseSingleMachineRule(const QString &singleRule)
+void Parser::parseSingleMachineRule(int number, const QString &singleRule)
 {
     QString currentState;
     QString stackTop;
@@ -66,9 +66,8 @@ void Parser::parseSingleMachineRule(const QString &singleRule)
     int i = 0;
 
     while (singleRule[i] == ' ') i++;
-    if (singleRule[i] != '(')
-    {
-
+    if (singleRule[i] != '('){
+        throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
     }
     i++;
     while (singleRule[i] == ' ') i++;
@@ -80,7 +79,7 @@ void Parser::parseSingleMachineRule(const QString &singleRule)
     while (singleRule[i] == ' ') i++;
     t = singleRule[i++];
     if (singleRule[i++] != ','){
-
+        throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
     }
     while (singleRule[i] == ' ') i++;
     while ( (singleRule[i] != ' ') && (singleRule[i] != ')') )
@@ -100,7 +99,9 @@ void Parser::parseSingleMachineRule(const QString &singleRule)
     {
         newStackTop += singleRule[i++];
     }
-
+    if (i > singleRule.size()){
+        throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
+    }
     if (newStackTop == emptySymbol) newStackTop = "";
 
     qDebug() << "currentState " << currentState << " t " << t << " stackTop " << stackTop << " newState " << newState << " newStackTop "    <<newStackTop;

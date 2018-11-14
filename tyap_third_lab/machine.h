@@ -44,6 +44,8 @@ public:
 
 
 
+    const QVector<int>* getRuleSeq() const;
+
 private:
     QString chain;
     QString stack;
@@ -54,6 +56,7 @@ private:
     QVector <QChar> *stackAlphabet;
     const QMap<QString, QVector<Condition>> * m;
     QVector <tact> ans;
+    QVector <int> ruleSeq;
 };
 
 #endif // MACHINE_H

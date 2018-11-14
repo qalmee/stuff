@@ -170,7 +170,7 @@ void Parser::parseSingleMachineRule(int number, const QString &singleRule)
 
     qDebug() << "currentState " << currentState << " t " << t << " stackTop " << stackTop << " newState " << newState << " newStackTop "    <<newStackTop;
 
-    Condition temp(t, stackTop, newStackTop,newState);
+    Condition temp(t, stackTop, newState, newStackTop, i);
     map[currentState].push_back(temp);
 }
 

@@ -9,17 +9,20 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QPushButton>
+#include "parser.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+public slots:
+    void checkChainSlot();
 private:
-    QLabel *numberOfStatesLabel;
-    QLabel *numberOfFinishStatesLabel;
+    QLabel *statesLabel;
+    QLabel *finishStatesLabel;
     QLabel *inputAlphabetLabel;
     QLabel *stackAlphabetLabel;
     QLabel *chainLabel;
@@ -29,8 +32,8 @@ private:
     QLabel *machineLabel;
     QLabel *outputLabel;
 
-    QLineEdit *numberOfStatesLine;
-    QLineEdit *numberOfFinishStatesLine;
+    QLineEdit *statesLine;
+    QLineEdit *finishStatesLine;
     QLineEdit *inputAlphabetLine;
     QLineEdit *stackAlphabetLine;
     QLineEdit *chainLine;
@@ -49,6 +52,8 @@ private:
     QVBoxLayout *machineLayout;
     QVBoxLayout *outputLayout;
     QVBoxLayout *wholeLayout;
+
+    Parser *parser;
 
     QWidget *window;
 };

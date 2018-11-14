@@ -3,8 +3,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    numberOfStatesLabel = new QLabel("Множество состояний:");
-    numberOfFinishStatesLabel = new QLabel("Множество кон. состояний:");
+    statesLabel = new QLabel("Множество состояний:");
+    finishStatesLabel = new QLabel("Множество кон. состояний:");
     inputAlphabetLabel = new QLabel("Входной алфавит:");
     stackAlphabetLabel = new QLabel("Алфавит стека:");
     chainLabel = new QLabel("Цепочка для проверки:");
@@ -14,14 +14,16 @@ MainWindow::MainWindow(QWidget *parent)
     machineLabel = new QLabel("Автомат:");
     outputLabel = new QLabel("Вывод:");
 
-    numberOfStatesLine = new QLineEdit;
-    numberOfFinishStatesLine = new QLineEdit;
+    statesLine = new QLineEdit;
+    finishStatesLine = new QLineEdit;
     inputAlphabetLine = new QLineEdit;
     stackAlphabetLine = new QLineEdit;
     chainLine = new QLineEdit;
     startStateLine = new QLineEdit;
-    emptySymbolLine = new QLineEdit;
+    emptySymbolLine = new QLineEdit("&");
     startStackLine = new QLineEdit;
+
+    emptySymbolLine->setReadOnly(true);
 
     machineTextEdit = new QTextEdit;
     outputTextEdit = new QTextEdit;
@@ -30,13 +32,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     inputLayout = new QGridLayout;
 
-    inputLayout->addWidget(numberOfStatesLabel, 0, 0);
-    inputLayout->addWidget(numberOfFinishStatesLabel, 1, 0);
+    inputLayout->addWidget(statesLabel, 0, 0);
+    inputLayout->addWidget(finishStatesLabel, 1, 0);
     inputLayout->addWidget(inputAlphabetLabel, 2, 0);
     inputLayout->addWidget(stackAlphabetLabel, 3, 0);
     inputLayout->addWidget(chainLabel, 4, 0);
-    inputLayout->addWidget(numberOfStatesLine, 0, 1);
-    inputLayout->addWidget(numberOfFinishStatesLine, 1,1);
+    inputLayout->addWidget(statesLine, 0, 1);
+    inputLayout->addWidget(finishStatesLine, 1,1);
     inputLayout->addWidget(inputAlphabetLine, 2, 1);
     inputLayout->addWidget(stackAlphabetLine, 3, 1);
     inputLayout->addWidget(chainLine, 4, 1);
@@ -65,8 +67,23 @@ MainWindow::MainWindow(QWidget *parent)
     window = new QWidget();
     setCentralWidget(window);
     window->setLayout(wholeLayout);
+
+    parser = new Parser;
+
+    QObject::connect(checkChainButton, &QPushButton::clicked, this,  &MainWindow::checkChainSlot);
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::checkChainSlot()
+{
+    parser->parseStates(statesLine->text());
+    parser->parseFinishStates(finishStatesLine->text());
+    parser->parseInputAlphabet(inputAlphabetLine->text());
+    parser->parseStackAlphabet(stackAlphabetLine->text());
+    parser->setEmptySymbol(emptySymbolLine->text().at(0));
+    parser->setStack(startStackLine->text());
+    parser->setChain(chainLine->text());
 }

@@ -1,12 +1,9 @@
 #include "machine.h"
 #include <stdexcept>
 
-Machine::Machine(const QString &chain, const QString &stack, const QString &startState, const QChar emptySymbol) :
-    chain(chain), stack(stack), emptySymbol(emptySymbol), startState(startState)
+Machine::Machine(const QMap<QString, QVector<Condition> > *map) : m(map)
 {
-
 }
-Machine::Machine(){}
 
 void Machine::run()
 {

@@ -55,7 +55,6 @@ private:
     QVBoxLayout *wholeLayout;
 
     Parser *parser;
-    Machine *machine;
 
     QWidget *window;
 };

@@ -9,8 +9,7 @@
 class Machine
 {
 public:
-    Machine(const QString &chain, const QString &stack, const QString &startState, const QChar emptySymbol);
-    Machine();
+    Machine(const QMap<QString, QVector<Condition> > *map);
 
     void run();
 

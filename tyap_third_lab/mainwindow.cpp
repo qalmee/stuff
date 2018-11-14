@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -69,7 +70,6 @@ MainWindow::MainWindow(QWidget *parent)
     window->setLayout(wholeLayout);
 
     parser = new Parser;
-    machine = new Machine();
 
     QObject::connect(checkChainButton, &QPushButton::clicked, this,  &MainWindow::checkChainSlot);
 }
@@ -80,19 +80,36 @@ MainWindow::~MainWindow()
 
 void MainWindow::checkChainSlot()
 {
-    parser->parseStates(statesLine->text());
-    parser->parseFinishStates(finishStatesLine->text());
-    parser->parseInputAlphabet(inputAlphabetLine->text());
-    parser->parseStackAlphabet(stackAlphabetLine->text());
-    parser->setEmptySymbol(emptySymbolLine->text().at(0));
-    parser->setStack(startStackLine->text());
-    parser->setChain(chainLine->text());
-    parser->parseMachineRules(machineTextEdit->toPlainText());
+    try {
+        parser->parseStates(statesLine->text());
+        parser->parseFinishStates(finishStatesLine->text());
+        parser->parseInputAlphabet(inputAlphabetLine->text());
+        parser->parseStackAlphabet(stackAlphabetLine->text());
+        parser->setEmptySymbol(emptySymbolLine->text().at(0));
+        parser->setStack(startStackLine->text());
+        parser->setChain(chainLine->text());
+        parser->parseMachineRules(machineTextEdit->toPlainText());
+    } catch (std::runtime_error *err) {
+        QMessageBox::warning(nullptr, "Warning", err->what());
+        return;
+    }
 
-    machine->setChain(this->chainLine->text());
-    machine->setStack(this->startStackLine->text());
-    machine->setStartState(this->startStateLine->text());
-    machine->setEmptySymbol(this->emptySymbolLine->text().at(0));
-    machine->setMap(parser->getMap());
+    Machine machine(parser->getMap());
+    machine.setChain(this->chainLine->text());
+    machine.setStack(this->startStackLine->text());
+    machine.setStartState(this->startStateLine->text());
+    machine.setEmptySymbol(this->emptySymbolLine->text().at(0));
+
+    try {
+        machine.run();
+    } catch (std::runtime_error *err) {
+        QMessageBox::warning(nullptr, "Warning", err->what());
+    }
+
+    QString chain = chainLine->text();
+    for (auto x : *machine.getAns()){
+        this->outputTextEdit->append(x.state + ", " + chain + "|"+ x.stack);
+        chain.remove(0, 1);
+    }
 
 }

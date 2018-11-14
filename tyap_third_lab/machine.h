@@ -42,8 +42,6 @@ public:
 
     void setMap(QMap<QString, QVector<Condition> > *value);
 
-
-
     const QVector<int>* getRuleSeq() const;
 
 private:

@@ -114,7 +114,7 @@ void MainWindow::checkChainSlot()
     QString chain = chainLine->text();
     for (auto x : *machine.getAns()){
         this->outputTextEdit->append("(" + x.state + ", " + chain + ", "+ x.stack + ")|-" +
-                                     (i < machine.getRuleSeq()->size() ? QString::number(machine.getRuleSeq()->at(i)) : ""));
+                                     (i < machine.getRuleSeq()->size() ? QString::number(machine.getRuleSeq()->at(i++)) : ""));
         chain.remove(0, 1);
     }
     delete parser;

@@ -100,6 +100,27 @@ void Parser::parseSingleMachineRule(const QString &singleRule)
         newStackTop += singleRule[i++];
     }
 
+    for (int i = 0; i < stackTop.size(); ++i)
+    {
+        bool flag = false;
+        for (auto j : stackAlphabet)
+            if (stackTop[i] == j) flag = true;
+        if (flag) flag = false;
+        else {
+            qDebug ()<< "problem stack top";
+        }
+    }
+
+    for (int i = 0; i < newStackTop.size(); ++i)
+    {
+        bool flag = false;
+        for (auto j : stackAlphabet)
+            if (newStackTop[i] == j) flag = true;
+        if (flag) flag = false;
+        else {
+            qDebug ()<< "problem new Stack top";
+        }
+    }
     if (newStackTop == emptySymbol) newStackTop = "";
 
     qDebug() << "currentState " << currentState << " t " << t << " stackTop " << stackTop << " newState " << newState << " newStackTop "    <<newStackTop;

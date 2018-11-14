@@ -74,33 +74,33 @@ void Parser::parseSingleMachineRule(const QString &singleRule)
     while (singleRule[i] == ' ') i++;
     while (singleRule[i] != ',')
     {
-        currentState += singleRule[i];
-        i++;
+        currentState += singleRule[i++];
     }
-    while (singleRule[i] == ' ') i++;
-    t = singleRule[i];
     i++;
-    while (singleRule[i] != ',') i++;
     while (singleRule[i] == ' ') i++;
-    while ( (singleRule[i] != ' ') || (singleRule[i] != ')') )
-    {
-        stackTop += singleRule[i];
-        i++;
+    t = singleRule[i++];
+    if (singleRule[i++] != ','){
+
     }
-    while (singleRule != '(') i++;
-    while (singleRule != ',')
+    while (singleRule[i] == ' ') i++;
+    while ( (singleRule[i] != ' ') && (singleRule[i] != ')') )
     {
-        newState += singleRule[i];
-        i++;
+        stackTop += singleRule[i++];
     }
-    while (singleRule == ' ') i++;
-    while (singleRule != ')')
+    while (singleRule[i] != '(') i++;
+    i++;
+    while (singleRule[i] != ',')
     {
-        newStackTop += singleRule[i];
-        i++;
+        newState += singleRule[i++];
+    }
+    i++;
+    while (singleRule[i] == ' ') i++;
+    while (singleRule[i] != ')')
+    {
+        newStackTop += singleRule[i++];
     }
 
-    if (newStackTop == '&') newStackTop = "";
+    if (newStackTop == emptySymbol) newStackTop = "";
 
     qDebug() << "currentState " << currentState << " t " << t << " stackTop " << stackTop << " newState " << newState << " newStackTop "    <<newStackTop;
 

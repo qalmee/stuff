@@ -54,7 +54,6 @@ private:
     QVBoxLayout *outputLayout;
     QVBoxLayout *wholeLayout;
 
-    Parser *parser;
 
     QWidget *window;
 };

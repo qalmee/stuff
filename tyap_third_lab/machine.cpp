@@ -72,11 +72,6 @@ void Machine::setStartState(const QString &value)
     startState = value;
 }
 
-QVector<QString> *Machine::getStates() const
-{
-    return states;
-}
-
 QVector<QString> *Machine::getFinishStates() const
 {
     return finishStates;
@@ -106,4 +101,9 @@ const QVector<Machine::tact> *Machine::getAns() const
 void Machine::setMap(QMap<QString, QVector<Condition> > *value)
 {
     m = value;
+}
+
+void Machine::setFinishStates(const QVector<QString> *value)
+{
+    finishStates = const_cast<QVector <QString> *>(value);
 }

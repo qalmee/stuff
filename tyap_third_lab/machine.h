@@ -25,9 +25,8 @@ public:
     QString getStartState() const;
     void setStartState(const QString &value);
 
-    QVector<QString> *getStates() const;
-
     QVector<QString> *getFinishStates() const;
+    void setFinishStates(const QVector<QString> *value);
 
     QVector<QChar> *getInputAlphabet() const;
 
@@ -43,12 +42,13 @@ public:
 
     void setMap(QMap<QString, QVector<Condition> > *value);
 
+
+
 private:
     QString chain;
     QString stack;
     QChar emptySymbol;
     QString startState;
-    QVector <QString> *states;
     QVector <QString> *finishStates;
     QVector <QChar> *inputAlphabet;
     QVector <QChar> *stackAlphabet;

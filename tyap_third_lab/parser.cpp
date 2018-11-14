@@ -154,7 +154,7 @@ void Parser::parseSingleMachineRule(int number, const QString &singleRule)
         }
     }
     if (!states.contains(newState)){
-        throw new std::runtime_error("Something is wrong with rule number " + QString::number(number).toStdString());
+        throw new std::runtime_error("");
     }
     if (!states.contains(currentState)){
         throw new std::runtime_error("Something is wrong with rule number " + QString::number(number).toStdString());

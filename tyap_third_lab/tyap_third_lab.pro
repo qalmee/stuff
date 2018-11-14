@@ -30,11 +30,13 @@ SOURCES += \
         mainwindow.cpp \
     parser.cpp \
     machine.cpp
+    condition.cpp
 
 HEADERS += \
         mainwindow.h \
     parser.h \
     machine.h
+    condition.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

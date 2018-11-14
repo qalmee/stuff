@@ -45,6 +45,37 @@ void Parser::parseStackAlphabet(const QString &stackAlphabet)
 
 }
 
+void Parser::parseMachineRules(const QString &machineRules)
+{
+
+}
+
+void Parser::parseSingleMachineRule(const QString &singleRule)
+{
+    QString currentState;
+    QChar t;
+    int i = 0;
+
+    while (singleRule[i] == ' ') i++;
+    if (singleRule[i] != '(')
+    {
+
+    }
+    i++;
+    while (singleRule[i] == ' ') i++;
+    while (singleRule[i] != ',')
+    {
+        currentState+=singleRule[i];
+        i++;
+    }
+    while (singleRule[i] == ' ') i++;
+    t = singleRule[i];
+    i++;
+    while (singleRule[i] == )
+
+
+}
+
 const QVector<QString> *Parser::getStates() const
 {
     return &this->states;

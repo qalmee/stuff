@@ -3,6 +3,10 @@
 #include <QDebug>
 #include <any>
 
+#define inputRuleErrorCheck if(i>=singleRule.size()-1)throw\
+    new\
+    std::runtime_error("Something\ is\ wrong\ with\ rule\ number"+QString::number(number).toStdString())
+
 Parser::Parser()
 {
 
@@ -29,7 +33,7 @@ void Parser::parseInputAlphabet(const QString &inputAlphabet)
     auto list = inputAlphabet.split(" ", QString::SkipEmptyParts);
     for (auto str : list){
         if (str.size() != 1){
-            throw new std::runtime_error("Something wrong about your alphabet");
+            throw new std::runtime_error("Something is wrong about your alphabet");
         }
         this->inputAlphabet.push_back(str[0]);
     }
@@ -40,7 +44,7 @@ void Parser::parseStackAlphabet(const QString &stackAlphabet)
     auto list = stackAlphabet.split(" ", QString::SkipEmptyParts);
     for (auto str : list){
         if (str.size() != 1){
-            throw new std::runtime_error("Something wrong about your stack alphabet");
+            throw new std::runtime_error("Something is wrong about your stack alphabet");
         }
         this->stackAlphabet.push_back(str[0]);
     }
@@ -65,38 +69,74 @@ void Parser::parseSingleMachineRule(int number, const QString &singleRule)
     QChar t;
     int i = 0;
 
+
     while (singleRule[i] == ' ') i++;
+
     if (singleRule[i] != '('){
-        throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
+        throw new std::runtime_error("Something is wrong with rule number" + QString::number(number).toStdString());
     }
+
     i++;
-    while (singleRule[i] == ' ') i++;
+    inputRuleErrorCheck;
+    while (singleRule[i] == ' ')
+    {
+        inputRuleErrorCheck;
+        i++;
+    }
     while (singleRule[i] != ',')
     {
+        inputRuleErrorCheck;
         currentState += singleRule[i++];
     }
+    inputRuleErrorCheck;
     i++;
-    while (singleRule[i] == ' ') i++;
-    t = singleRule[i++];
-    if (singleRule[i++] != ','){
-        throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
+    while (singleRule[i] == ' ')
+    {
+        inputRuleErrorCheck;
+        i++;
     }
-    while (singleRule[i] == ' ') i++;
+    t = singleRule[i++];
+    inputRuleErrorCheck;
+    if (singleRule[i++] != ','){
+        throw new std::runtime_error("Something is wrong with rule number" + QString::number(number).toStdString());
+    }
+    while (singleRule[i] == ' ')
+    {
+        inputRuleErrorCheck;
+        i++;
+    }
     while ( (singleRule[i] != ' ') && (singleRule[i] != ')') )
     {
+        inputRuleErrorCheck;
         stackTop += singleRule[i++];
     }
-    while (singleRule[i] != '(') i++;
+    while (singleRule[i] != '(')
+    {
+        inputRuleErrorCheck;
+        i++;
+    }
+    inputRuleErrorCheck;
     i++;
-    while (singleRule[i] == ' ') i++;
+    while (singleRule[i] == ' ')
+    {
+        inputRuleErrorCheck;
+        i++;
+    }
     while (singleRule[i] != ',')
     {
+        inputRuleErrorCheck;
         newState += singleRule[i++];
     }
+    inputRuleErrorCheck;
     i++;
-    while (singleRule[i] == ' ') i++;
+    while (singleRule[i] == ' ')
+    {
+        inputRuleErrorCheck;
+        i++;
+    }
     while (singleRule[i] != ')')
     {
+        inputRuleErrorCheck;
         newStackTop += singleRule[i++];
     }
 
@@ -122,7 +162,7 @@ void Parser::parseSingleMachineRule(int number, const QString &singleRule)
         }
     }
     if (i > singleRule.size()){
-        throw new std::runtime_error("Something wrong with rule number" + QString::number(number).toStdString());
+        throw new std::runtime_error("Something is wrong with rule number" + QString::number(number).toStdString());
     }
     if (newStackTop == emptySymbol) newStackTop = "";
 

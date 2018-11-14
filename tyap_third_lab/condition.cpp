@@ -6,7 +6,8 @@ Condition::Condition()
 
 }
 
-Condition::Condition(QChar t, QString stackTop, QString newStackTop, QString nextState) : t(t), stackTop(stackTop), newStackTop(newStackTop), nextState(nextState)
+Condition::Condition(QChar t, QString stackTop, QString newStackTop, QString nextState, int number) :
+    t(t), stackTop(stackTop), newStackTop(newStackTop), nextState(nextState), number(number)
 {
 
 }

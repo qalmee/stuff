@@ -17,6 +17,7 @@ void Machine::run()
                 currentState = con.getNextState();
                 stack.replace(0, con.getStackTop().size(), con.getNewStackTop());
                 if (con.getT() == emptySymbol) i--;
+                ruleSeq.push_back(con.getNumber());
                 break;
             }
         }
@@ -103,6 +104,11 @@ const QVector<Machine::tact> *Machine::getAns() const
 void Machine::setMap(QMap<QString, QVector<Condition> > *value)
 {
     m = value;
+}
+
+const QVector<int>* Machine::getRuleSeq() const
+{
+    return &ruleSeq;
 }
 
 void Machine::setFinishStates(const QVector<QString> *value)

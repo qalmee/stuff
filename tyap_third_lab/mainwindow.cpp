@@ -109,9 +109,10 @@ void MainWindow::checkChainSlot()
         QMessageBox::warning(nullptr, "Warning", err->what());
     }
 
+    int i = 0;
     QString chain = chainLine->text();
     for (auto x : *machine.getAns()){
-        this->outputTextEdit->append("(" + x.state + ", " + chain + "|"+ x.stack + ")");
+        this->outputTextEdit->append("(" + x.state + ", " + chain + ", "+ x.stack + ")|-" + QString::number(machine.getRuleSeq()->at(i++)));
         chain.remove(0, 1);
     }
     delete parser;

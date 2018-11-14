@@ -7,7 +7,7 @@ class Condition
 {
 public:
     Condition();
-    Condition(QChar t, QString stackTop, QString newStackTop, QString nextState);
+    Condition(QChar t, QString stackTop, QString newStackTop, QString nextState, int number);
     QChar getT() const;
     QString getNextState() const;
     QString getStackTop() const;
@@ -18,11 +18,15 @@ public:
     void setNewStackTop(const QString &value);
     void setNextState(const QString &value);
 
+    int getNumber() const;
+    void setNumber(int value);
+
 private:
     QChar t;
     QString stackTop;
     QString newStackTop;
     QString nextState;
+    int number;
 };
 
 #endif // CONDITION_H

@@ -27,6 +27,9 @@ void Machine::run()
     if (!finishStates->contains(currentState)){
         throw  new std::runtime_error("Конечное состояние автомата не было достигнуто");
     }
+    if (stack.size() > 0){
+        throw  new std::runtime_error("Стэк не пуст");
+    }
 }
 
 QString Machine::getChain() const

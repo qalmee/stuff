@@ -149,7 +149,7 @@ void Parser::parseSingleMachineRule(int number, const QString &singleRule)
 
     for (auto ch : newStackTop)
     {
-        if (!stackAlphabet.contains(ch)){
+        if (!stackAlphabet.contains(ch) && !(newStackTop.size() == 1 && newStackTop[0] == emptySymbol)){
             throw new std::runtime_error("Rule number " + QString::number(number).toStdString() + " contains symbol not from alphabet");
         }
     }
@@ -159,7 +159,7 @@ void Parser::parseSingleMachineRule(int number, const QString &singleRule)
     if (!states.contains(currentState)){
         throw new std::runtime_error("Something is wrong with rule number " + QString::number(number).toStdString());
     }
-    if (!inputAlphabet.contains(t)){
+    if (!inputAlphabet.contains(t) && t != emptySymbol){
         throw new std::runtime_error("Something is wrong with rule number " + QString::number(number).toStdString());
     }
 

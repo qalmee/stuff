@@ -8,19 +8,21 @@ Machine::Machine(const QMap<QString, QVector<Condition> > *map) : m(map)
 void Machine::run()
 {
     QString currentState = this->startState;
-    for (int i = 0; i<chain.size(); i++){
+    for (int i = 0;; i++){
         ans.push_back({currentState, stack});
         bool flag = false;
         for (auto con : this->m->value(currentState)){
-            if ((con.getT() == chain[i] || con.getT() == emptySymbol) && stack.startsWith(con.getStackTop())){
+            if (((i < chain.size() ? con.getT() == chain[i] : false) || con.getT() == emptySymbol) && stack.startsWith(con.getStackTop())){
                 flag = true;
                 currentState = con.getNextState();
                 stack.replace(0, con.getStackTop().size(), con.getNewStackTop());
+                if (con.getT() == emptySymbol) i--;
                 break;
             }
         }
         if (!flag){
-            throw new std::runtime_error("Конец цепочки не был достигнут");
+            if (i < chain.size()) throw new std::runtime_error("Конец цепочки не был достигнут");
+            break;
         }
     }
     ans.push_back({currentState, stack});

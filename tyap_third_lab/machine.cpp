@@ -11,6 +11,7 @@ void Machine::run()
 {
     QString currentState = this->startState;
     for (int i = 0; i<chain.size(); i++){
+        ans.push_back({currentState, stack});
         bool flag = false;
         for (auto con : this->m->take(currentState)){
             if ((con.getT() == chain[i] || con.getT() == emptySymbol) && stack.startsWith(con.getStackTop())){
@@ -24,6 +25,7 @@ void Machine::run()
             throw new std::runtime_error("Конец цепочки не был достигнут");
         }
     }
+    ans.push_back({currentState, stack});
     if (!finishStates->contains(currentState)){
         throw  new std::runtime_error("Конечное состояние автомата не было достигнуто");
     }
@@ -92,4 +94,10 @@ QVector<QChar> *Machine::getStackAlphabet() const
 QMap<QString, QVector<Condition> > *Machine::getMap() const
 {
     return m;
+}
+
+const QVector<Machine::tact> *Machine::getAns() const
+{
+    return &this->ans;
+
 }

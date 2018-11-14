@@ -16,7 +16,7 @@ public:
     void parseInputAlphabet(const QString &inputAlphabet);
     void parseStackAlphabet(const QString &stackAlphabet);
     void parseMachineRules(const QString &machineRules);
-    void parseSingleMachineRule(const QString &singleRule);
+    void parseSingleMachineRule(int number, const QString &singleRule);
 
     const QVector<QString> *getStates() const;
     const QVector<QString> *getFinishStates() const;

@@ -8,8 +8,8 @@ Machine::Machine(const QMap<QString, QVector<Condition> > *map) : m(map)
 void Machine::run()
 {
     QString currentState = this->startState;
+    ans.push_back({currentState, stack});
     for (int i = 0;; i++){
-        ans.push_back({currentState, stack});
         bool flag = false;
         for (auto con : this->m->value(currentState)){
             if (((i < chain.size() ? con.getT() == chain[i] : false) || con.getT() == emptySymbol) && stack.startsWith(con.getStackTop())){
@@ -24,13 +24,13 @@ void Machine::run()
             if (i < chain.size()) throw new std::runtime_error("Конец цепочки не был достигнут");
             break;
         }
+        ans.push_back({currentState, stack});
     }
-    ans.push_back({currentState, stack});
     if (!finishStates->contains(currentState)){
-        throw  new std::runtime_error("Конечное состояние автомата не было достигнуто");
+        throw new std::runtime_error("Конечное состояние автомата не было достигнуто");
     }
     if (stack.size() > 0){
-        throw  new std::runtime_error("Стэк не пуст");
+        throw new std::runtime_error("Стэк не пуст");
     }
 }
 

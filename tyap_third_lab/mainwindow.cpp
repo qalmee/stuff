@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include <QMessageBox>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -110,9 +111,12 @@ void MainWindow::checkChainSlot()
     }
 
     int i = 0;
+    for (auto x : *machine.getRuleSeq()){
+        qDebug() << x;
+    }
     QString chain = chainLine->text();
     for (auto x : *machine.getAns()){
-        this->outputTextEdit->append("(" + x.state + ", " + chain + ", "+ x.stack + ")|-" + QString::number(machine.getRuleSeq()->at(i++)));
+        this->outputTextEdit->append("(" + x.state + ", " + chain + ", "+ x.stack + ")|-");
         chain.remove(0, 1);
     }
     delete parser;

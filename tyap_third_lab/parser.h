@@ -32,6 +32,9 @@ public:
 
     const QMap<QString, QVector<Condition> > *getMap() const;
 
+    QString getStartState() const;
+    void setStartState(const QString &value);
+
 private:
     QVector <QString> states;
     QVector <QString> finishStates;
@@ -40,6 +43,7 @@ private:
     QString chain;
     QString stack;
     QChar emptySymbol;
+    QString startState;
     QMap <QString, QVector<Condition>> map;
 };
 

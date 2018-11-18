@@ -84,6 +84,7 @@ void MainWindow::checkChainSlot()
     this->outputTextEdit->clear();
     try {
         parser->parseStates(statesLine->text());
+        parser->setStartState(startStateLine->text());
         parser->parseFinishStates(finishStatesLine->text());
         parser->parseInputAlphabet(inputAlphabetLine->text());
         parser->parseStackAlphabet(stackAlphabetLine->text());

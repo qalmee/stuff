@@ -30,13 +30,15 @@ SOURCES += \
         grammar.cpp \
     rules.cpp \
     mypushbutton.cpp \
-    chainbuilder.cpp
+    chainbuilder.cpp \
+    historydialog.cpp
 HEADERS += \
         mainwindow.h \
         grammar.h \
     rules.h \
     mypushbutton.h \
-    chainbuilder.h
+    chainbuilder.h \
+    historydialog.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

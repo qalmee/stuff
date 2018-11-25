@@ -1,8 +1,10 @@
 #include "mainwindow.h"
 #include "chainbuilder.h"
+#include <QDialog>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    this->parent = nullptr;
     setGeometry(200, 200, 800,600);
     wholeLayout = new QHBoxLayout;
     leftUpLayout = new QVBoxLayout;
@@ -13,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     grammarWidget = new Grammar();
     refreshGrammarButton = new QPushButton("Обновить");
+
+    showHistoryButton = new QPushButton("Показать преобразования");
 
     words = new QTextEdit();
 
@@ -25,12 +29,16 @@ MainWindow::MainWindow(QWidget *parent)
     wholeLayout->addLayout(leftLayout, 70);
     wholeLayout->addLayout(rightLayout, 30);
     rightLayout->addWidget(words);
+    rightLayout->addWidget(showHistoryButton);
 
     QWidget *window = new QWidget();
     window->setLayout(wholeLayout);
     setCentralWidget(window);
 
+    historyDialog = new HistoryDialog();
+
     connect(refreshGrammarButton, SIGNAL(clicked()), this, SLOT(rulesRefresherSlot()));
+    connect(showHistoryButton, &QPushButton::clicked, this, &MainWindow::showHistorySlot);
 }
 
 MainWindow::~MainWindow()
@@ -49,8 +57,6 @@ void MainWindow::rulesRefresherSlot()
     amountOfRules = grammarWidget->getAmountOfUnterminal();
     minLength = grammarWidget->getMinLength();
     maxLength = grammarWidget->getMaxLength();
-    //amountOfTerminal = grammarWidget->getAmountOfTerminal();
-
 
     rulesWidget = new Rules(amountOfRules);
     refreshRulesButton = new QPushButton("Построить цепочки");
@@ -59,13 +65,15 @@ void MainWindow::rulesRefresherSlot()
     leftDownLayout->addWidget(rulesScrollArea);
     leftDownLayout->addWidget(refreshRulesButton);
     createdEarlier = true;
+    rulesWidget->resize(540, rulesWidget->height());
 
-    qDebug() << amountOfRules << " " << minLength << " " << maxLength << endl;
+    qDebug() << rulesWidget->size() << " " << refreshRulesButton->size() << endl;
 
 }
 
 void MainWindow::build()
 {
+    if (parent != nullptr) delete parent;
     ChainBuilder chainBuilder;
     auto data = rulesWidget->getChainsVector();
     qDebug()<<rulesWidget->getTargetSymbolIndex()<<endl;
@@ -74,6 +82,14 @@ void MainWindow::build()
     for (auto str : *result){
         words->append("\"" + QString::fromUtf8(str.c_str()) + "\" : " + QString::number(str.size()) + "\n");
     }
+    parent = chainBuilder.getParent();
+}
+
+void MainWindow::showHistorySlot()
+{
+    if (parent == nullptr) return;
+    historyDialog->setParent(parent);
+    historyDialog->show();
 }
 
 void MainWindow::clearLayout(QLayout * layout, bool deleteWidgets)

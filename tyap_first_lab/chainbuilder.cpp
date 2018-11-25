@@ -2,6 +2,9 @@
 
 #include <queue>
 #include <set>
+#include <QDebug>
+#include <string>
+#include <iostream>
 
 ChainBuilder::ChainBuilder()
 {
@@ -11,6 +14,7 @@ ChainBuilder::ChainBuilder()
 vector<string> *ChainBuilder::solve(unsigned int start_arg, pair<unsigned int, unsigned int> borders_arg,
                                     vector<pair<char, vector<string> > > *data_arg)
 {
+    parent = new unordered_map<string, string>();
     borders = borders_arg;
     data = data_arg;
     target = (*data_arg)[start_arg].first;
@@ -20,6 +24,11 @@ vector<string> *ChainBuilder::solve(unsigned int start_arg, pair<unsigned int, u
     }
     bfs(string(1, target));
     return ans;
+}
+
+unordered_map<string, string> *ChainBuilder::getParent()
+{
+    return parent;
 }
 
 void ChainBuilder::bfs(string current)
@@ -35,6 +44,10 @@ void ChainBuilder::bfs(string current)
         for (auto ch : s){
             if (!map.count(ch)) terminalCount++;
         }
+        if (terminalCount == s.size() && s.size() >= borders.first && s.size() <= borders.second){
+            set.insert(s);
+            continue;
+        }
         if (terminalCount > borders.second){
             continue;
         }
@@ -46,23 +59,26 @@ void ChainBuilder::bfs(string current)
                 terminal = false;
                 for (auto str : map[s[i]])
                 {
-                    auto s1 = s;
+                    auto s_tmp = s;
                     if (!str.size()){
-                        s1.erase(i, 1);
-                        q.push(s1);
+                        s_tmp.erase(i, 1);
+                        q.push(s_tmp);
                     }
-                    else if (s1.size() <= borders.second*1.5) q.push(s1.replace(i, 1, str));
+                    else if (s_tmp.size() <= borders.second*1.9)
+                    {
+                        s_tmp.replace(i, 1, str);
+                        q.push(s_tmp);
+                    }
+                    parent->emplace(s_tmp, s);
                 }
                 break;
             }
         }
-        if (terminal && s.size() >= borders.first && s.size() <= borders.second)
-        {
-            set.insert(s);
-        }
-
     }
     for (auto str : set){
         ans->push_back(str);
+    }
+    for (auto x : *parent){
+        qDebug() << QString::fromStdString(x.first) << " " << QString::fromStdString(x.second);
     }
 }

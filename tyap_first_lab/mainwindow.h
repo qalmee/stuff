@@ -15,6 +15,7 @@
 
 #include "grammar.h"
 #include "rules.h"
+#include "historydialog.h"
 
 class MainWindow : public QMainWindow
 {
@@ -38,12 +39,17 @@ private:
 
     QPushButton *refreshGrammarButton;
     QPushButton *refreshRulesButton;
+    QPushButton *showHistoryButton;
 
     QHBoxLayout *wholeLayout;
     QVBoxLayout *leftUpLayout;
     QVBoxLayout *leftDownLayout;
     QVBoxLayout *rightLayout;
     QVBoxLayout *leftLayout;
+
+    std::unordered_map<std::string, std::string> *parent;
+
+    HistoryDialog *historyDialog;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -54,6 +60,7 @@ public:
 public slots:
     void rulesRefresherSlot();
     void build();
+    void showHistorySlot();
 
 signals:
     void rulesRefreshSignal();

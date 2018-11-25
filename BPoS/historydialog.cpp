@@ -38,4 +38,5 @@ void HistoryDialog::search(const QString &text)
         else ans.append(v[i]);
     }
     history->setText(ans);
+    history->setReadOnly(true);
 }

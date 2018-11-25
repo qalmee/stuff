@@ -8,8 +8,8 @@ Grammar::Grammar(QWidget *parent) : QWidget(parent)
     minLengthLabel = new QLabel("От");
     maxLengthLabel = new QLabel("До");
 
-    lp = new QRadioButton("Леволинейная");
-    rp = new QRadioButton("Праволинейная");
+    lp = new QRadioButton("Леволинейная грамматика");
+    rp = new QRadioButton("Праволинейная грамматика");
     lp->setChecked(true);
 
     startChainLabel = new QLabel("Начальная подцепочка");
@@ -101,4 +101,25 @@ int Grammar::getMaxLength()
 bool Grammar::isLpGrammar() const
 {
     return lp->isChecked();
+}
+
+QString Grammar::getStartChain() const
+{
+    return startChain->text();
+
+}
+
+QString Grammar::getEndChain() const
+{
+    return endChain->text();
+}
+
+QPair<QString, int> Grammar::getMSymbol() const
+{
+    return QPair<QString, int>(multiAccuranceSymbol->text(), multiplicity->text().toInt());
+}
+
+void Grammar::setMultiplicity(const QString &s)
+{
+    multiplicity->setText(s);
 }

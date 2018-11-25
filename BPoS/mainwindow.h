@@ -16,6 +16,7 @@
 #include "grammar.h"
 #include "rules.h"
 #include "historydialog.h"
+#include "chainbuilder.h"
 
 class MainWindow : public QMainWindow
 {
@@ -50,6 +51,8 @@ private:
     std::unordered_map<std::string, std::string> *parent;
 
     HistoryDialog *historyDialog;
+
+    pair<string, int> toStdPair(const QPair<QString, int> &p) const;
 
 public:
     MainWindow(QWidget *parent = nullptr);

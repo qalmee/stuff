@@ -45,6 +45,10 @@ public:
     int getMinLength();
     int getMaxLength();
     bool isLpGrammar() const;
+    QString getStartChain() const;
+    QString getEndChain() const;
+    QPair<QString, int> getMSymbol() const;
+    void setMultiplicity(const QString &s);
 };
 
 #endif // GRAMMAR_H

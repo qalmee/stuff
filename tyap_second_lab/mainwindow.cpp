@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QSet>
 #include <QMessageBox>
+#include <QStandardItem>
 
 MainWindow::MainWindow(QApplication *a, QWidget *parent) :
     QMainWindow(parent), app(a)
@@ -86,10 +87,6 @@ void MainWindow::checkChainSlot()
         }
     }    
     chainString = chainLine->text();
-    if (chainString == ""){
-        this->badInputSlot();
-        return;
-    }
     this->runMachine();
 }
 
@@ -148,11 +145,6 @@ void MainWindow::prepareView()
         }
     }
 
-    tableLayout->addWidget(startStateLabel, numberOfStates + 3, 0);
-    tableLayout->addWidget(startState, numberOfStates + 4, 0);
-    tableLayout->addWidget(finishStateLabel, numberOfStates + 5, 0);
-    tableLayout->addWidget(finishState, numberOfStates + 6, 0);
-
     tableLayout->addWidget(chainLabel, numberOfStates + 3, 2, 1, numberOfTerminals + 1);
     tableLayout->addWidget(chainLine, numberOfStates + 4, 2, 1, numberOfTerminals + 1);
     tableLayout->addWidget(checkChainButton, numberOfStates + 5, 2, 1, numberOfTerminals + 1);
@@ -160,6 +152,24 @@ void MainWindow::prepareView()
     tableLayout->addWidget(secondLineH, numberOfStates + 6, 1, 1, numberOfTerminals + 1);
     tableLayout->addWidget(thirdLineH, numberOfStates + 2, 0, 1, numberOfTerminals+2);
     tableLayout->addWidget(returnToDialogButton, numberOfStates + 7, 2, 1, numberOfTerminals);
+    tableLayout->addWidget(startStateLabel, numberOfStates + 3, 0);
+    tableLayout->addWidget(startState, numberOfStates + 4, 0);
+    tableLayout->addWidget(finishStateLabel, numberOfStates + 5, 0);
+    tableLayout->addWidget(finishState, numberOfStates + 6, 0);
+    startStateLabel->hide();
+    startState->hide();
+    finishStateLabel->hide();
+    finishState->hide();
+    modelComboBox = new QStandardItemModel;
+    for (int i = 0; i < numberOfStates; ++i)
+    {
+        QStandardItem * temp = new QStandardItem;
+        temp->setText("");
+        temp->setCheckable(true);
+        temp->setCheckState(Qt::Unchecked);
+        modelComboBox->setItem(i, temp);
+    }
+    finishState->setModel(modelComboBox);
 
     tableLayout->addWidget(lineH, 1, 0, 1, numberOfTerminals + 2);
     tableLayout->addWidget(lineV, 0, 1, numberOfStates + 2, 1);
@@ -195,12 +205,14 @@ void MainWindow::constructStuff()
     returnToDialogButton = new QPushButton("Вернуться к условию");
 
     startStateLabel = new QLabel("Начальное состояние:");
-    finishStateLabel = new QLabel("Конечное состояние:");
+    finishStateLabel = new QLabel("Конечные состояния:");
     startState = new QComboBox();
     finishState = new QComboBox();
 
+
     QObject::connect(checkChainButton, &QPushButton::clicked, this, &MainWindow::checkChainSlot);
     QObject::connect(returnToDialogButton, &QPushButton::clicked, this, &MainWindow::returnToDialogSlot);
+    QObject::connect(finishState, SIGNAL(activated(int)), this, SLOT(finishStateComboBoxSelected(int)));
 
 }
 
@@ -209,6 +221,12 @@ void MainWindow::deleteStuff()
     delete startStateLabel;
     delete finishStateLabel;
     delete startState;
+    for (int i = 0; i < numberOfStates; i++)
+    {
+        delete modelComboBox->item(i);
+    }
+    modelComboBox->clear();
+    delete modelComboBox;
     delete finishState;
 
     delete lineV;
@@ -237,37 +255,37 @@ void MainWindow::deleteStuff()
 
 void MainWindow::checkStatesSlot()
 {
-    bool allEntered = true;
     for (int i = 0; i < numberOfStates; ++i)
     {
         if(statesLines[i]->text().isEmpty())
         {
-            allEntered = false;
-            break;
+            return;
         }
     }
-    if (allEntered)
-    {
-        startState->clear();
-        finishState->clear();
-        for (int i = 0; i < numberOfStates; ++i)
-        {
-            startState->addItem(statesLines[i]->text());
-            finishState->addItem(statesLines[i]->text());
-        }
+    startState->clear();
+   // finishState->clear();
 
-        startStateLabel->show();
-        startState->show();
-        finishStateLabel->show();
-        finishState->show();
+    for (int i = 0; i < numberOfStates; ++i)
+    {
+        startState->addItem(statesLines[i]->text());
+        modelComboBox->item(i)->setText(statesLines[i]->text());
     }
+
+    startStateLabel->show();
+    startState->show();
+    finishStateLabel->show();
+    finishState->show();
 }
 
 void MainWindow::runMachine()
 {
+    QVector<bool> finishMask(numberOfStates);
+    for (int i = 0; i<numberOfStates; i++){
+        finishMask[i] = (modelComboBox->item(i)->checkState() == Qt::Checked);
+    }
     machine->setChain(chainString);
     machine->setData(&statesNames, &terminals, &statesValues,
-                     statesNames.indexOf(startState->currentText()), statesNames.indexOf(finishState->currentText()));
+                     statesNames.indexOf(startState->currentText()), finishMask);
     machine->run();
     int error = machine->getError();
     auto result = machine->getResult();
@@ -288,4 +306,10 @@ void MainWindow::runMachine()
     }
     resultDialog->setInformation(message, result, chainString);
     resultDialog->show();
+}
+
+void MainWindow::finishStateComboBoxSelected(int index)
+{
+    modelComboBox->item(index)->setCheckState(
+                modelComboBox->item(index)->checkState() == Qt::Checked ? Qt::Unchecked : Qt::Checked);
 }

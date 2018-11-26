@@ -36,6 +36,7 @@ public:
 
     struct tact{
         QString state, stack;
+        int i;
     };
 
     const QVector <tact> *getAns() const;

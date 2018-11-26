@@ -8,7 +8,7 @@ Machine::Machine(const QMap<QString, QVector<Condition> > *map) : m(map)
 void Machine::run()
 {
     QString currentState = this->startState;
-    ans.push_back({currentState, stack});
+    ans.push_back({currentState, stack, 0});
     for (int i = 0;; i++){
         bool flag = false;
         for (auto con : this->m->value(currentState)){
@@ -25,7 +25,7 @@ void Machine::run()
             if (i < chain.size()) throw new std::runtime_error("Конец цепочки не был достигнут");
             break;
         }
-        ans.push_back({currentState, stack});
+        ans.push_back({currentState, stack, i});
     }
     if (!finishStates->contains(currentState)){
         throw new std::runtime_error("Конечное состояние автомата не было достигнуто");

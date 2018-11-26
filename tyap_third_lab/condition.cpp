@@ -62,3 +62,13 @@ void Condition::setNumber(int value)
     number = value;
 }
 
+Condition &Condition::operator=(const Condition &other)
+{
+    this->setT(other.getT());
+    this->setStackTop(other.getStackTop());
+    this->setNumber(other.getNumber());
+    this->setNextState(other.getNextState());
+    this->setNewStackTop(other.getNewStackTop());
+    return *this;
+}
+

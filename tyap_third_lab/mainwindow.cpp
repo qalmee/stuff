@@ -97,7 +97,6 @@ void MainWindow::checkChainSlot()
         delete parser;
         return;
     }
-
     Machine machine(parser->getMap());
     machine.setChain(this->chainLine->text());
     machine.setStack(this->startStackLine->text());
@@ -105,10 +104,15 @@ void MainWindow::checkChainSlot()
     machine.setEmptySymbol(this->emptySymbolLine->text().at(0));
     machine.setFinishStates(parser->getFinishStates());
 
+    bool wasCathed = false;
     try {
         machine.run();
     } catch (std::runtime_error *err) {
+        wasCathed = true;
         QMessageBox::warning(nullptr, "Warning", err->what());
+    }
+    if (!wasCathed){
+        QMessageBox::information(nullptr, "Ок", "Завершено успешно");
     }
 
     int i = 0, j = 1;

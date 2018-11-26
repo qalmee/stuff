@@ -20,6 +20,7 @@ public:
 
     int getNumber() const;
     void setNumber(int value);
+    Condition &operator= (const Condition &other);
 
 private:
     QChar t;

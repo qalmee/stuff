@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <QDebug>
 #include <any>
+#include <algorithm>
 
 #define inputRuleErrorCheck if(i>=singleRule.size()-1)throw\
     new\
@@ -57,6 +58,9 @@ void Parser::parseMachineRules(const QString &machineRules)
     for (auto str : machineRules.split("\n", QString::SkipEmptyParts))
     {
         parseSingleMachineRule(i++, str);
+    }
+    for (auto &vector : this->map){
+        std::sort(vector.begin(), vector.end(), [this](const Condition &a, const Condition &b) {return a.getT() == this->emptySymbol;});
     }
 }
 

@@ -60,7 +60,7 @@ void Parser::parseMachineRules(const QString &machineRules)
         parseSingleMachineRule(i++, str);
     }
     for (auto &vector : this->map){
-        std::sort(vector.begin(), vector.end(), [this](const Condition &a, const Condition &b) {return a.getT() == this->emptySymbol;});
+        std::sort(vector.begin(), vector.end(), [this](const Condition &a, const Condition &b) {return b.getT() == this->emptySymbol;});
     }
 }
 

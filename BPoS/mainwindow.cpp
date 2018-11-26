@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "chainbuilder.h"
 #include <QDialog>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -39,10 +38,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(refreshGrammarButton, SIGNAL(clicked()), this, SLOT(rulesRefresherSlot()));
     connect(showHistoryButton, &QPushButton::clicked, this, &MainWindow::showHistorySlot);
+
+    rulesRefresherSlot();
 }
 
-MainWindow::~MainWindow()
-{}
+MainWindow::~MainWindow() {}
 
 void MainWindow::Initialization()
 {
@@ -52,6 +52,7 @@ void MainWindow::Initialization()
 void MainWindow::rulesRefresherSlot()
 {
     clearLayout(leftDownLayout, createdEarlier);
+
     QScrollArea *rulesScrollArea = new QScrollArea;
 
     amountOfRules = grammarWidget->getAmountOfUnterminal();
@@ -60,15 +61,15 @@ void MainWindow::rulesRefresherSlot()
 
     rulesWidget = new Rules(amountOfRules);
     refreshRulesButton = new QPushButton("Построить цепочки");
+    if (!amountOfRules) refreshRulesButton->setDisabled(true);
     connect(refreshRulesButton, &QPushButton::clicked, this, &MainWindow::build);
     rulesScrollArea->setWidget(rulesWidget);
     leftDownLayout->addWidget(rulesScrollArea);
     leftDownLayout->addWidget(refreshRulesButton);
-    createdEarlier = true;
+
     rulesWidget->resize(540, rulesWidget->height());
-
     qDebug() << rulesWidget->size() << " " << refreshRulesButton->size() << endl;
-
+    createdEarlier = true;
 }
 
 void MainWindow::build()
@@ -76,8 +77,11 @@ void MainWindow::build()
     if (parent != nullptr) delete parent;
     ChainBuilder chainBuilder;
     auto data = rulesWidget->getChainsVector();
-    qDebug()<<rulesWidget->getTargetSymbolIndex()<<endl;
-    auto result = chainBuilder.solve(rulesWidget->getTargetSymbolIndex(), std::make_pair(grammarWidget->getMinLength(), grammarWidget->getMaxLength()), &data);
+    if (grammarWidget->getMSymbol().second == 0) grammarWidget->setMultiplicity("0");
+    auto result = chainBuilder.solve(rulesWidget->getTargetSymbolIndex(),
+                                     std::make_pair(grammarWidget->getMinLength(), grammarWidget->getMaxLength()),
+                                     &data, grammarWidget->getStartChain().toStdString(), grammarWidget->getEndChain().toStdString(),
+                                     toStdPair(grammarWidget->getMSymbol()), grammarWidget->isLpGrammar());
     words->clear();
     for (auto str : *result){
         words->append("\"" + QString::fromUtf8(str.c_str()) + "\" : " + QString::number(str.size()) + "\n");
@@ -109,5 +113,9 @@ void MainWindow::clearLayout(QLayout * layout, bool deleteWidgets)
             delete item;
         }
     }
+}
+
+pair<string, int> MainWindow::toStdPair(const QPair<QString, int> &p) const {
+    return make_pair(p.first.toStdString(), p.second);
 }
 

@@ -36,7 +36,7 @@ public:
 
     struct tact{
         QString state, stack;
-        int i;
+        bool isEmptySymbol;
     };
 
     const QVector <tact> *getAns() const;

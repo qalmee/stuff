@@ -111,13 +111,14 @@ void MainWindow::checkChainSlot()
         QMessageBox::warning(nullptr, "Warning", err->what());
     }
 
-    int i = 0, j = 0;
+    int i = 0, j = 1;
+
     QString chain = chainLine->text();
     auto answer = *(machine.getAns());
     for (auto x : answer){
         this->outputTextEdit->append("(" + x.state + ", " + chain + ", "+ x.stack + ")|-" +
                                      (i < machine.getRuleSeq()->size() ? QString::number(machine.getRuleSeq()->at(i++)) : ""));
-        if (chain.size() && answer[j + 1].i > answer[j].i) chain.remove(0, 1);
+        if (answer.size() > j && !answer[j].isEmptySymbol && chain.size()) chain.remove(0, 1);
         j++;
     }
     delete parser;

@@ -60,6 +60,7 @@ void MainWindow::rulesRefresherSlot()
 
     rulesWidget = new Rules(amountOfRules);
     refreshRulesButton = new QPushButton("Построить цепочки");
+    if (!amountOfRules) refreshRulesButton->setDisabled(true);
     connect(refreshRulesButton, &QPushButton::clicked, this, &MainWindow::build);
     rulesScrollArea->setWidget(rulesWidget);
     leftDownLayout->addWidget(rulesScrollArea);

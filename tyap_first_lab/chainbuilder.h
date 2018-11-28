@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <vector>
+#include <unordered_set>
 
 using namespace std;
 
@@ -22,7 +23,7 @@ private:
     char target;
     void bfs(string current);
 
-
+    unordered_set<string> used;
     const char empty = '&';
 
 };

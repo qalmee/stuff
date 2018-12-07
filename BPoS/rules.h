@@ -16,7 +16,6 @@
 #include <vector>
 #include <functional>
 #include "mypushbutton.h"
-
 class Rules : public QWidget
 {
     Q_OBJECT

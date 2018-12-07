@@ -14,6 +14,7 @@ ChainBuilder::ChainBuilder()
 vector<string> *ChainBuilder::solve(unsigned int start_arg, pair<unsigned int, unsigned int> borders_arg,
                                     vector<pair<char, vector<string> > > *data_arg)
 {
+    used.reserve(10000);
     parent = new unordered_map<string, string>();
     borders = borders_arg;
     data = data_arg;
@@ -36,6 +37,7 @@ void ChainBuilder::bfs(string current)
     queue<string> q;
     set<string> set;
     q.push(current);
+    used.insert(current);
     while (!q.empty())
     {
         auto s = q.front();
@@ -63,11 +65,15 @@ void ChainBuilder::bfs(string current)
                     if (!str.size()){
                         s_tmp.erase(i, 1);
                         q.push(s_tmp);
+                        used.insert(s_tmp);
                     }
                     else if (s_tmp.size() <= borders.second*1.9)
                     {
                         s_tmp.replace(i, 1, str);
-                        q.push(s_tmp);
+                        if (!used.count(s_tmp)){
+                            q.push(s_tmp);
+                            used.insert(s_tmp);
+                        }
                     }
                     parent->emplace(s_tmp, s);
                 }

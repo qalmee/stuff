@@ -16,7 +16,6 @@ RegExpGenerator::RegExpGenerator(const QVector<QChar> &alph, const QString &star
 QString RegExpGenerator::generate()
 {
     generateAnyString();
-    qDebug() << anyString;
     QString regExp, secondary, primary;
     int secondaryPart = (mul - (symbolCount(startChain, symbol) + symbolCount(endChain, symbol)) % mul) % mul;
     for (int i = 0; i<secondaryPart; i++){
@@ -26,7 +25,6 @@ QString RegExpGenerator::generate()
         secondary += anyString + "*";
         secondary = "(" + secondary + ")";
     }
-    qDebug() << mul;
     if (mul != 1){
         for (int i = 0; i<mul; i++){
             primary += anyString + "*" + QString(1, symbol);
@@ -41,6 +39,7 @@ QString RegExpGenerator::generate()
         regExp += "+" + str;
     }
     this->regExp = regExp;
+    calculateRegExpForRPN();
     return regExp;
 }
 
@@ -90,6 +89,38 @@ QVector<QString> RegExpGenerator::final() const
         }
     }
     return v;
+}
+
+bool RegExpGenerator::isOperand(const QChar &ch) const
+{
+    return (ch != '(' && ch != ')' && ch != '+' && ch != '*');
+}
+
+void RegExpGenerator::setRegExp(const QString &value)
+{
+    regExp = value;
+}
+
+QString RegExpGenerator::getRegExpForRPN() const
+{
+    return regExpForRPN;
+}
+
+void RegExpGenerator::calculateRegExpForRPN()
+{
+    QString re = regExp;
+    for (int i =0; i<re.size(); i++){
+        if (re[i] == ' ') re.remove(i--, 1);
+    }
+    for (int i = 1; i<re.size(); i++){
+        if ((re[i - 1] != '(' && re[i - 1] != '+' && isOperand(re[i])) ||
+            (re[i - 1] != '+' && re[i - 1] != '(' && re[i] == '(')){
+            re.insert(i, '&');
+            i++;
+        }
+    }
+    regExpForRPN = re;
+    qDebug() << re;
 }
 
 QString RegExpGenerator::getStartChain() const

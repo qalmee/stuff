@@ -24,6 +24,9 @@ public:
     void setMul(int value);
 
     QString getRegExp() const;
+    void setRegExp(const QString &value);
+    QString getRegExpForRPN() const;
+    void calculateRegExpForRPN();
 
 private:
 
@@ -31,9 +34,10 @@ private:
     QString generateAnyString();
     QString generateAnyStringWithoutRestrictions() const;
     QVector <QString> final() const;
+    bool isOperand(const QChar &ch) const;
 
     QVector <QChar> alphabet;
-    QString startChain, endChain, regExp, anyString;
+    QString startChain, endChain, regExp, regExpForRPN, anyString;
     QChar symbol;
     int mul;
 };

@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "regexpgenerator.h"
 #include <QMessageBox>
+#include <QSet>
+#include <QDebug>
+//#include <>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -9,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setCentralWidget(centralWidget);
 
     connect(centralWidget->getGenerateRegExpButton(), &QPushButton::clicked, this, &MainWindow::generateRegExp);
+    connect(centralWidget->getGenerateChainsButton(), &QPushButton::clicked, this, &MainWindow::generateChains);
 }
 
 MainWindow::~MainWindow()
@@ -45,4 +49,9 @@ void MainWindow::generateRegExp()
     }
     RegExpGenerator generator(alphabet, startChain,endChain, symbolM, mul);
     centralWidget->setRegExp(generator.generate());
+}
+
+void MainWindow::generateChains()
+{
+
 }

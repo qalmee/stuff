@@ -13,6 +13,7 @@ public:
     ~MainWindow();
 public slots:
     void generateRegExp();
+    void generateChains();
 private:
     CentralWidget *centralWidget;
 };

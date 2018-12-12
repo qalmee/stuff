@@ -100,9 +100,9 @@ void MainWindow::returnToDialogSlot()
     this->hide();
     dialog->show();
     this->deleteStuff();
-    qDebug()<<window->minimumSize();
+//    qDebug()<<window->minimumSize();
     this->setMinimumSize(window->minimumSize());
-    qDebug()<<this->minimumSize();
+//    qDebug()<<this->minimumSize();
     window->resize(QSize(100, 100));
     this->resize(QSize(110, 110));
 }

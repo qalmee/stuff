@@ -62,6 +62,10 @@ void Machine::run()
             return;
         }
         currentState = m[currentState][ch];
+        if (currentState.isEmpty()){
+            error = Machine::EndWasNotReached;
+            return;
+        }
     }
     result.push_back({currentState, '\0'});
     if (!finishStates[statesNames->indexOf(currentState)]){

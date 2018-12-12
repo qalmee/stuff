@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 ChainBuilder::ChainBuilder()
 {
@@ -67,7 +68,7 @@ void ChainBuilder::bfs(string current)
                         q.push(s_tmp);
                         used.insert(s_tmp);
                     }
-                    else if (s_tmp.size() <= borders.second*1.9)
+                    else if (s_tmp.size() <= max(static_cast<unsigned int>(borders.second*1.9), borders.second + 3))
                     {
                         s_tmp.replace(i, 1, str);
                         if (!used.count(s_tmp)){
@@ -84,7 +85,7 @@ void ChainBuilder::bfs(string current)
     for (auto str : set){
         ans->push_back(str);
     }
-    for (auto x : *parent){
-        qDebug() << QString::fromStdString(x.first) << " " << QString::fromStdString(x.second);
-    }
+    //for (auto x : *parent){
+    //    qDebug() << QString::fromStdString(x.first) << " " << QString::fromStdString(x.second);
+    //}
 }

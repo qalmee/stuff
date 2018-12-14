@@ -19,6 +19,10 @@ CentralWidget::CentralWidget(QWidget *parent) : QWidget(parent)
     symbolM->setValidator(new QRegExpValidator(QRegExp(".")));
     regExp  = new QLineEdit();
     chains = new QTextEdit();
+    minLen = new QLineEdit();
+    maxLen = new QLineEdit();
+    minLen->setValidator(new QIntValidator(0, 99));
+    maxLen->setValidator(new QIntValidator(0, 99));
     chains->setReadOnly(true);
     //mainLayout->setColumnStretch(0, 70);
     //mainLayout->setColumnStretch(4, 70);
@@ -32,19 +36,25 @@ CentralWidget::CentralWidget(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(symbolM, 3, 1);
     mainLayout->addWidget(new QLabel("Кратность"), 3, 2);
     mainLayout->addWidget(multiplicity, 3, 3);
+    mainLayout->addWidget(new QLabel("Минимальная длина"), 4, 0);
+    mainLayout->addWidget(minLen, 4, 1);
+    mainLayout->addWidget(new QLabel("Максимальная длина"), 4, 2);
+    mainLayout->addWidget(maxLen, 4, 3);
 
-    mainLayout->addWidget(generateRegExp, 4, 0, 1, 4);
-    mainLayout->addWidget(regExp, 5, 0, 1, 4);
+    mainLayout->addWidget(generateRegExp, 5, 0, 1, 4);
+    mainLayout->addWidget(regExp, 6, 0, 1, 4);
     QFrame *line = new QFrame();
     line->setFrameShape(QFrame::HLine);
     line->setFrameShadow(QFrame::Plain);
     line->setLineWidth(2);
-    mainLayout->addWidget(line, 6, 0, 1, 4);
-    mainLayout->addWidget(generateChains, 7, 0, 1, 4);
-    mainLayout->addWidget(chains, 0, 4, 8, 1);
+    mainLayout->addWidget(line, 7, 0, 1, 4);
+    mainLayout->addWidget(generateChains, 8, 0, 1, 4);
+    mainLayout->addWidget(chains, 0, 4, 9, 1);
 
     symbolM->setMaximumWidth(50);
     multiplicity->setMaximumWidth(50);
+    minLen->setMaximumWidth(50);
+    maxLen->setMaximumWidth(50);
 
     chains->setMaximumWidth(350);
 
@@ -107,4 +117,33 @@ void CentralWidget::setRegExp(const QString &value)
 void CentralWidget::setMultiplicity(int value)
 {
     multiplicity->setText(QString::number(value));
+}
+
+int CentralWidget::getMaxLen() const
+{
+    return maxLen->text().toInt();
+}
+
+void CentralWidget::setMaxLen(int value)
+{
+    maxLen->setText(QString::number(value));
+}
+
+int CentralWidget::getMinLen() const
+{
+    return minLen->text().toInt();
+}
+
+void CentralWidget::setMinLen(int value)
+{
+    minLen->setText(QString::number(value));
+}
+
+void CentralWidget::setChains(const QSet<QString> *s)
+{
+    chains->clear();
+    chains->append("Строк найдено: " + QString::number(s->size()));
+    for (auto st : *s){
+        chains->append("\"" + st + "\" : " + QString::number(st.size()));
+    }
 }

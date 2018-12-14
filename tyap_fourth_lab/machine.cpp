@@ -13,12 +13,23 @@ void Machine::run()
     for (int i = 0;; i++){
         bool flag = false;
         bool isEmptySymbol = false;
+        //dalshe spagetti.. sorry (glhf)
         for (auto con : this->m->value(currentState)){
-            if (((i < chain.size() ? con.getT() == chain[i] : false) || con.getT() == emptySymbol) && stack.startsWith(con.getStackTop())){
+            if (((i < chain.size() ? con.getT() == chain[i] : false) ||
+                 con.getT() == emptySymbol) && (stack.startsWith(con.getStackTop())  ||
+                                                (con.getStackTop().size() == 1 && con.getStackTop().at(0) == this->emptySymbol && stack.isEmpty())) ){
                 flag = true;
                 if (con.getAddToOutput() != emptySymbol) translated += con.getAddToOutput();
                 currentState = con.getNextState();
-                stack.replace(0, con.getStackTop().size(), con.getNewStackTop());
+                if (con.getNewStackTop().size() == 1 && con.getNewStackTop().at(0) == this->emptySymbol){
+                    stack.remove(0, 1);
+                } else {
+                    if (stack.isEmpty()){
+                        stack = con.getNewStackTop();
+                    }else{
+                        stack.replace(0, con.getStackTop().size(), con.getNewStackTop());
+                    }
+                }
                 if (con.getT() == emptySymbol) i--;
                 isEmptySymbol = (con.getT() == emptySymbol);
                 ruleSeq.push_back(con.getNumber());

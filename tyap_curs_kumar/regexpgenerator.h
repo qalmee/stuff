@@ -26,6 +26,7 @@ public:
     QString getRegExp() const;
     void setRegExp(const QString &value);
     QString getRegExpForRPN() const;
+    static QString calculateRegExpForRPN(const QString &s);
     void calculateRegExpForRPN();
 
 private:
@@ -34,7 +35,7 @@ private:
     QString generateAnyString();
     QString generateAnyStringWithoutRestrictions() const;
     QVector <QString> final() const;
-    bool isOperand(const QChar &ch) const;
+    constexpr static bool isOperand(const QChar &ch);
 
     QVector <QChar> alphabet;
     QString startChain, endChain, regExp, regExpForRPN, anyString;

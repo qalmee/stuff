@@ -28,13 +28,19 @@ public:
 
     void setMultiplicity(int value);
 
+    int getMaxLen() const;
+    void setMaxLen(int value);
+    int getMinLen() const;
+    void setMinLen(int value);
+
 signals:
 
 public slots:
+    void setChains(const QSet<QString> *s);
 
 private:
     QPushButton *generateRegExp, *generateChains;
-    QLineEdit *startChain, *endChain, *alphabet, *multiplicity, *symbolM, *regExp;
+    QLineEdit *startChain, *endChain, *alphabet, *multiplicity, *symbolM, *regExp, *minLen, *maxLen;
     QTextEdit *chains;
 
     QGridLayout *mainLayout;

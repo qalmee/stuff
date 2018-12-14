@@ -132,7 +132,7 @@ void MainWindow::checkChainSlot()
         auto answer = *(machine->getAns());
         this->outputTextEdit->append("Цепочка для проверки: " + chain);
         for (auto x : answer){
-            this->outputTextEdit->append("(" + x.state + ", " + chain + ", " + x.stack + x.translated + ")|-" +
+            this->outputTextEdit->append("(" + x.state + ", " + chain + ", " + x.stack + ", " + x.translated + ")|-" +
                                          (i < machine->getRuleSeq()->size() ? QString::number(machine->getRuleSeq()->at(i++)) : ""));
             if (answer.size() > j && !answer[j].isEmptySymbol && chain.size()) chain.remove(0, 1);
             j++;

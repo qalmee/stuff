@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "centralwidget.h"
+#include "chainsgenerator.h"
 
 class MainWindow : public QMainWindow
 {
@@ -14,6 +15,8 @@ public:
 public slots:
     void generateRegExp();
     void generateChains();
+    void check();
+    void setAnswer(QSet<QString> *ans, bool err, QString text);
 private:
     CentralWidget *centralWidget;
 };

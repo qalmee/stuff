@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 #include "regexpgenerator.h"
+#include "chainsgenerator.h"
 #include <QMessageBox>
 #include <QSet>
+#include <QTimer>
 #include <QDebug>
 //#include <>
 
@@ -53,5 +55,28 @@ void MainWindow::generateRegExp()
 
 void MainWindow::generateChains()
 {
+    QString copyRegExp = centralWidget->getRegExp();
+    copyRegExp = RegExpGenerator::calculateRegExpForRPN(copyRegExp);
+    ChainsGenerator *chainsGenerator =
+            new ChainsGenerator(centralWidget->getMaxLen(), centralWidget->getMinLen(), copyRegExp);
+    connect(chainsGenerator, &ChainsGenerator::resultReady, this, &MainWindow::setAnswer, Qt::ConnectionType::BlockingQueuedConnection);
+    connect(chainsGenerator, &ChainsGenerator::finished, this, &MainWindow::check);
+    connect(chainsGenerator, &ChainsGenerator::finished, chainsGenerator, &QObject::deleteLater);
+    chainsGenerator->start();
+}
+
+void MainWindow::check()
+{
+    qDebug() << "check";
+}
+
+void MainWindow::setAnswer(QSet<QString> *ans, bool err, QString text)
+{
+    if (err){
+        QMessageBox::warning(this, "Ошибка", text);
+    }
+    else {
+        centralWidget->setChains(ans);
+    }
 
 }

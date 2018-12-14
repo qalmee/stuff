@@ -91,7 +91,7 @@ QVector<QString> RegExpGenerator::final() const
     return v;
 }
 
-bool RegExpGenerator::isOperand(const QChar &ch) const
+constexpr bool RegExpGenerator::isOperand(const QChar &ch)
 {
     return (ch != '(' && ch != ')' && ch != '+' && ch != '*');
 }
@@ -108,7 +108,13 @@ QString RegExpGenerator::getRegExpForRPN() const
 
 void RegExpGenerator::calculateRegExpForRPN()
 {
-    QString re = regExp;
+    regExpForRPN = RegExpGenerator::calculateRegExpForRPN(regExp);
+    qDebug() << regExpForRPN;
+}
+
+QString RegExpGenerator::calculateRegExpForRPN(const QString &s)
+{
+    QString re = s;
     for (int i =0; i<re.size(); i++){
         if (re[i] == ' ') re.remove(i--, 1);
     }
@@ -119,8 +125,8 @@ void RegExpGenerator::calculateRegExpForRPN()
             i++;
         }
     }
-    regExpForRPN = re;
     qDebug() << re;
+    return re;
 }
 
 QString RegExpGenerator::getStartChain() const

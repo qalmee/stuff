@@ -171,7 +171,7 @@ void Parser::parseSingleMachineRule(int number, const QString &singleRule)
 
     for (auto ch : stackTop)
     {
-        if (!stackAlphabet.contains(ch)){
+        if (!stackAlphabet.contains(ch) && !(stackTop.size() == 1 && stackTop[0] == emptySymbol)){
             throw new std::runtime_error("Rule number " + QString::number(number).toStdString() + " contains symbol not from alphabet");
         }
     }

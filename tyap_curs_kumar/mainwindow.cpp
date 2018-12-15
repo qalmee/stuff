@@ -5,13 +5,17 @@
 #include <QSet>
 #include <QTimer>
 #include <QDebug>
+#include <QMenuBar>
 //#include <>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow(QApplication *app, QWidget *parent)
+    : QMainWindow(parent), myApp(app)
 {
     centralWidget = new CentralWidget();
     this->setCentralWidget(centralWidget);
+
+    createActions();
+    createMenus();
 
     connect(centralWidget->getGenerateRegExpButton(), &QPushButton::clicked, this, &MainWindow::generateRegExp);
     connect(centralWidget->getGenerateChainsButton(), &QPushButton::clicked, this, &MainWindow::generateChains);
@@ -78,5 +82,52 @@ void MainWindow::setAnswer(QSet<QString> *ans, bool err, QString text)
     else {
         centralWidget->setChains(ans);
     }
+
+}
+
+void MainWindow::createActions()
+{
+    importFrom = new QAction("Загрузить из фала", this);
+    importFrom->setStatusTip("Импортировать данные из файла в программу");
+    connect(importFrom, &QAction::triggered, this, &MainWindow::importFromSlot);
+
+    exportIn = new QAction("Выгрузить в файл", this);
+    importFrom->setStatusTip("Экспортировать результат в файл");
+    connect(exportIn, &QAction::triggered, this, &MainWindow::exportInSlot);
+
+    about = new QAction("Об авторе", this);
+    connect(about, &QAction::triggered, this, &MainWindow::aboutSlot);
+
+    task = new QAction("Задание", this);
+    connect(task, &QAction::triggered, this, &MainWindow::taskSlot);
+
+    exitAct = new QAction("Выход", this);
+    connect(exitAct, &QAction::triggered, myApp, &QApplication::quit);
+}
+
+void MainWindow::createMenus()
+{
+    file = menuBar()->addMenu("Файл");
+    file->addAction(importFrom);
+    file->addAction(exportIn);
+    file->addSeparator();
+    file->addAction(exitAct);
+
+    help = menuBar()->addMenu("Помощь");
+    help->addAction(task);
+    help->addSeparator();
+    help->addAction(about);
+}
+
+void MainWindow::importFromSlot(){
+
+}
+void MainWindow::exportInSlot(){
+
+}
+void MainWindow::aboutSlot(){
+
+}
+void MainWindow::taskSlot(){
 
 }

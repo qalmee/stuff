@@ -30,13 +30,15 @@ SOURCES += \
         mainwindow.cpp \
     centralwidget.cpp \
     regexpgenerator.cpp \
-    chainsgenerator.cpp
+    chainsgenerator.cpp \
+    aboutdialog.cpp
 
 HEADERS += \
         mainwindow.h \
     centralwidget.h \
     regexpgenerator.h \
-    chainsgenerator.h
+    chainsgenerator.h \
+    aboutdialog.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

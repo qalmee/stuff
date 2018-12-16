@@ -66,9 +66,14 @@ QVector<QChar> CentralWidget::getAlphabet() const
     QVector <QChar> v;
     v.reserve(text.size());
     for (auto ch : text){
-        if (ch != ' ' && ch != ',') v.push_back(ch);
+        if (ch != ' ' && ch != ',' && ch != nullptr) v.push_back(ch);
     }
     return v;
+}
+
+QString CentralWidget::getAlphabetString() const
+{
+    return alphabet->text();
 }
 
 QString CentralWidget::getStartChain() const
@@ -114,7 +119,7 @@ void CentralWidget::setRegExp(const QString &value)
     regExp->setText(value);
 }
 
-void CentralWidget::setMultiplicity(int value)
+void CentralWidget::setMultiplicity(const int value)
 {
     multiplicity->setText(QString::number(value));
 }
@@ -143,7 +148,43 @@ void CentralWidget::setChains(const QSet<QString> *s)
 {
     chains->clear();
     chains->append("Строк найдено: " + QString::number(s->size()));
-    for (auto st : *s){
+    for (const auto &st : *s){
         chains->append("\"" + st + "\" : " + QString::number(st.size()));
     }
+}
+
+void CentralWidget::setGenerateButtonActive()
+{
+    generateChains->setEnabled(true);
+}
+
+void CentralWidget::setGenerateButtonDisabled()
+{
+    generateChains->setEnabled(false);
+
+}
+
+QString CentralWidget::getChains() const
+{
+    return chains->toPlainText();
+}
+
+void CentralWidget::setSymbolM(const QString &value)
+{
+    symbolM->setText(value);
+}
+
+void CentralWidget::setAlphabet(const QString &value)
+{
+    alphabet->setText(value);
+}
+
+void CentralWidget::setEndChain(const QString &value)
+{
+    endChain->setText(value);
+}
+
+void CentralWidget::setStartChain(const QString &value)
+{
+    startChain->setText(value);
 }

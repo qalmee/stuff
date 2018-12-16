@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QApplication>
+#include "aboutdialog.h"
 
 class MainWindow : public QMainWindow
 {
@@ -19,19 +20,21 @@ public slots:
     void generateRegExp();
     void generateChains();
     void check();
-    void setAnswer(QSet<QString> *ans, bool err, QString text);
+    void setAnswer(QSet<QString> *ans, bool err, const QString &text);
 
     void importFromSlot();
     void exportInSlot();
     void aboutSlot();
     void taskSlot();
+    void exampleSlot();
 private:
     void createActions();
     void createMenus();
     CentralWidget *centralWidget;
     QMenu *help, *file;
-    QAction *importFrom, *exportIn, *about, *task, *exitAct;
+    QAction *importFrom, *exportIn, *about, *task, *exitAct, *example;
     QApplication *myApp;
+    AboutDialog *aboutDialog, *taskDialog;
 };
 
 #endif // MAINWINDOW_H

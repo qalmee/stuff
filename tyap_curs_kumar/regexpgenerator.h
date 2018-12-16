@@ -8,7 +8,7 @@ class RegExpGenerator
 {
 public:
     RegExpGenerator();
-    RegExpGenerator(const QVector<QChar> &alph, const QString &start, const QString &end, const QChar &symbol, const int mul);
+    RegExpGenerator(QVector<QChar> alph, QString start, QString end, const QChar &symbol, const int mul);
     QString generate();
 
     QString getStartChain() const;

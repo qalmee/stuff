@@ -1,15 +1,17 @@
 #include "regexpgenerator.h"
 #include <QDebug>
 #include <algorithm>
+#include <utility>
 
 RegExpGenerator::RegExpGenerator()
 {
 
 }
 
-RegExpGenerator::RegExpGenerator(const QVector<QChar> &alph, const QString &start, const QString &end, const QChar &symbol, const int mul) :
-    alphabet(alph), startChain(start), endChain(end), symbol(symbol), mul(mul)
+RegExpGenerator::RegExpGenerator(QVector<QChar> alph, QString start, QString end, const QChar &symbol, const int mul) :
+    alphabet(std::move(alph)), startChain(std::move(start)), endChain(std::move(end)), symbol(symbol), mul(mul)
 {
+
 
 }
 
@@ -35,7 +37,7 @@ QString RegExpGenerator::generate()
         primary = generateAnyStringWithoutRestrictions() + "*";
     }
     regExp = startChain + secondary + primary + endChain;
-    for (auto str : final()){
+    for (const auto &str : final()){
         regExp += "+" + str;
     }
     this->regExp = regExp;
@@ -55,15 +57,18 @@ int RegExpGenerator::symbolCount(const QString &s, const QChar &ch) const
 QString RegExpGenerator::generateAnyString()
 {
     QString str = "(";
-    for (int i = 0; i<alphabet.size(); i++){
-        auto ch = alphabet[i];
+    for (const auto &ch : alphabet){
         if (ch != symbol){
-            str += QString(1, ch);
-            str += "+";
+            str.push_back(ch);
+            str.push_back('+');
         }
     }
     if (str.size() > 1) str.chop(1);
     str += ")";
+    if (str.size() == 3){
+        str.chop(1);
+        str.remove(0, 1);
+    }
     this->anyString = str;
     return str;
 }

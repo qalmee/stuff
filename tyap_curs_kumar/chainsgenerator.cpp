@@ -8,17 +8,13 @@
 #include <algorithm>
 #include <queue>
 
-ChainsGenerator::ChainsGenerator() : ans(new QSet<QString>()), isErr(false)
-{
-    maxLength = 0;
-}
-
 ChainsGenerator::ChainsGenerator(const int maxLen, const int minLen, const QString &s) :
     maxLength(maxLen), minLength(minLen), ans(new QSet<QString>()), isErr(false)
 {
-    regExp = s;
+    regExp = s.toStdString();
     if (maxLength < 0) maxLength = 0;
     if (minLength < 0) minLength = 0;
+    notStarredPartsLen = 0;
 }
 
 ChainsGenerator::~ChainsGenerator()
@@ -26,33 +22,33 @@ ChainsGenerator::~ChainsGenerator()
     delete this->ans;
 }
 
-constexpr bool ChainsGenerator::is_op (QChar c) {
+constexpr bool ChainsGenerator::is_op (char c) {
     return c=='*' || c=='+' || c=='&' || c == ')' || c == '(';
 }
 
-int ChainsGenerator::bfs(const QSet<QString> &s1, QSet<QString> &res)
+int ChainsGenerator::bfs(const unordered_set<string> &s1, unordered_set<string> &res)
 {
     int count = 0;
     int maxLenForBFS = maxLength - notStarredPartsLen;
-    std::queue<QString> q;
+    std::queue<string> q;
     res.clear();
     res.reserve(100000);
 
     for (const auto &str : s1){
-        if (str.size() != 0 && str.size() <= maxLenForBFS){
+        if (!str.empty() && static_cast<int>(str.size()) <= maxLenForBFS){
             q.push(str);
             res.insert(str);
         }
     }
     while (!q.empty()){
-        if (count > 15000000) return 1;
+        if (count > 20000000) return 1;
         auto t = q.front();
         q.pop();
         for (auto str : s1){
             count++;
-            if (str.size() == 0) continue;
-            str = t + str;
-            if (str.size() <= maxLenForBFS && !res.contains(str)){
+            if (str.empty()) continue;
+            str += t;
+            if (static_cast<int>(str.size()) <= maxLenForBFS && res.count(str) == 0){
                 q.push(str);
                 res.insert(str);
             }
@@ -62,35 +58,35 @@ int ChainsGenerator::bfs(const QSet<QString> &s1, QSet<QString> &res)
     return 0;
 }
 
-void ChainsGenerator::notStarredPartsLength(const QString &s)
+void ChainsGenerator::notStarredPartsLength(const string &s)
 {
-    QVector <int> lenStack;
-    QVector <QChar> operatorStack;
-    for (int i=0; i<s.length(); ++i){
+    vector <int> lenStack;
+    vector <char> operatorStack;
+    for (size_t i=0; i<s.length(); ++i){
         if (s[i] != ' ')
             if (s[i] == '('){
                 operatorStack.push_back ('(');
             }
             else if (s[i] == ')') {
-                if (operatorStack.isEmpty()){
+                if (operatorStack.empty()){
                     throw new std::runtime_error("Стэк операторов неожиданно пуст.\nКод ошибки 2.");
                 }
                 while (operatorStack.back() != '('){
                     process_op1 (lenStack, operatorStack.back());
                     operatorStack.pop_back();
-                    if (operatorStack.isEmpty()){
+                    if (operatorStack.empty()){
                         throw new std::runtime_error("Стэк операторов неожиданно пуст.\nКод ошибки 2.");
                     }
                 }
                 operatorStack.pop_back();
             }
             else if (is_op (s[i])) {
-                QChar curop = s[i];
+                char curop = s[i];
                 while (!operatorStack.empty() && priority(operatorStack.back()) >= priority(s[i])){
                     process_op1 (lenStack, operatorStack.back());
                     operatorStack.pop_back();
                 }
-                operatorStack.push_back (curop);
+                operatorStack.push_back(curop);
             }
             else {
                 int length = 0;
@@ -104,12 +100,12 @@ void ChainsGenerator::notStarredPartsLength(const QString &s)
     }
 
     while (!operatorStack.empty()){
-        if (lenStack.isEmpty()){
+        if (lenStack.empty()){
             throw new std::runtime_error("Стэк операндов неожиданно пуст.\nКод ошибки 1");
         }
         process_op1 (lenStack, operatorStack.back());  operatorStack.pop_back();
     }
-    if (lenStack.isEmpty()){
+    if (lenStack.empty()){
         throw new std::runtime_error("Стэк операндов неожиданно пуст.\nКод ошибки 1");
     }
     qDebug() << lenStack[0];
@@ -122,7 +118,7 @@ QString ChainsGenerator::getError() const
     return error;
 }
 
-constexpr int ChainsGenerator::priority (QChar op) {
+constexpr int ChainsGenerator::priority (char op) {
     return
             op == '+' ? 1 :
                         op == '&' ? 2 :
@@ -130,7 +126,7 @@ constexpr int ChainsGenerator::priority (QChar op) {
                                                 -1;
 }
 
-void ChainsGenerator::process_op (QVector<QSet<QString>> & st, QChar op) {
+void ChainsGenerator::process_op (vector<unordered_set<string>> & st, char op) {
     if (op == ')' || op == '(') return;
     if (timeToStop) return;
     auto s = st.back();
@@ -139,27 +135,32 @@ void ChainsGenerator::process_op (QVector<QSet<QString>> & st, QChar op) {
     if (op == '+'){
         auto s1 = st.back();
         st.pop_back();
-        s += s1;
-        st.push_back(s);
+        unordered_set<string> s2;
+        s2 = s1;
+        s2.reserve((s2.size() + s1.size()) << 1);
+        for (const auto &str : s){
+            s2.insert(str);
+        }
+        st.push_back(s2);
     } else if (op == '&'){
         auto s1 = st.back();
         st.pop_back();
-        QSet<QString> newSet;
+        unordered_set<string> newSet;
         newSet.reserve(s.size() * s1.size() * 2);
         for (const auto &str : s1){
             for (const auto &str1 : s){
-                if (str.size() + str1.size() <= maxLength) newSet.insert(str + str1);
+                if (static_cast<int>(str.size() + str1.size()) <= maxLength) newSet.insert(str + str1);
             }
         }
         st.push_back(newSet);
     } else if (op == '*'){
-        QSet<QString> newSet;
+        unordered_set<string> newSet;
         if (bfs(s, newSet) != 0) timeToStop = true;
         st.push_back(newSet);
     }
 }
 
-void ChainsGenerator::process_op1(QVector<int> &st, QChar op)
+void ChainsGenerator::process_op1(vector<int> &st, char op)
 {
     if (st.empty()){
         throw new std::runtime_error("Стэк операндов неожиданно пуст");
@@ -189,10 +190,10 @@ void ChainsGenerator::process_op1(QVector<int> &st, QChar op)
 }
 
 void ChainsGenerator::calculate() {
-    QVector<QSet<QString>> operandStack;
-    QVector<QChar> operatorStack;
-    QString s = regExp;
-    for (int i=0; i<s.length(); ++i){
+    vector<unordered_set<string>> operandStack;
+    vector<char> operatorStack;
+    string s = regExp;
+    for (size_t i=0; i<s.length(); ++i){
         if (timeToStop) return;
         if (s[i] != ' ')
             if (s[i] == '('){
@@ -206,7 +207,7 @@ void ChainsGenerator::calculate() {
                 operatorStack.pop_back();
             }
             else if (is_op (s[i])) {
-                QChar curop = s[i];
+                char curop = s[i];
                 while (!operatorStack.empty() && priority(operatorStack.back()) >= priority(s[i])){
                     process_op (operandStack, operatorStack.back());
                     operatorStack.pop_back();
@@ -214,26 +215,26 @@ void ChainsGenerator::calculate() {
                 operatorStack.push_back (curop);
             }
             else {
-                QString str;
+                string str;
                 while (i < s.length() && !is_op(s[i])){
                     str.push_back(s[i++]);
                 }
                 i--;
-                QSet<QString> tmp;
+                unordered_set<string> tmp;
                 tmp.insert(str);
                 operandStack.push_back(tmp);
             }
     }
 
     while (!operatorStack.empty()){
-        if (operandStack.isEmpty()){
+        if (operandStack.empty()){
             throw new std::runtime_error("Стэк операндов неожиданно опустел");
         }
         process_op (operandStack, operatorStack.back());  operatorStack.pop_back();
     }
-    ans->reserve(operandStack[0].size() << 1);
-    for (auto str : operandStack[0]){
-        if (str.size() >= minLength) ans->insert(str);
+    ans->reserve(static_cast<int>(operandStack[0].size()) << 1);
+    for (const auto &str : operandStack[0]){
+        if (static_cast<int>(str.size()) >= minLength) ans->insert(QString::fromStdString(str));
     }
 }
 

@@ -4,8 +4,13 @@
 #include <QString>
 #include <QVector>
 #include <QSet>
-#include <QMutex>
 #include <QThread>
+#include <vector>
+#include <string>
+#include <set>
+#include <unordered_set>
+
+using namespace std;
 
 class ChainsGenerator : public QThread
 {
@@ -13,7 +18,6 @@ class ChainsGenerator : public QThread
 
 public:
 
-    ChainsGenerator();
     ChainsGenerator(const int maxLen, const int minLen, const QString &s);
     ~ChainsGenerator() override;
     void calculate ();
@@ -31,15 +35,15 @@ public:
     bool timeToStop = false;
 
 private:
-    inline void process_op (QVector<QSet<QString>> & st, QChar op);
-    inline void process_op1 (QVector<int> & st, QChar op);
-    constexpr int priority (QChar op);
-    constexpr bool is_op (QChar c);
-    inline int bfs(const QSet<QString> &s1, QSet<QString> &res);
-    inline void notStarredPartsLength(const QString &s);
+    inline void process_op (vector<unordered_set<string>> & st, char op);
+    inline void process_op1 (vector<int> & st, char op);
+    constexpr int priority (char op);
+    constexpr bool is_op (char c);
+    inline int bfs(const unordered_set<string> &s1, unordered_set<string> &res);
+    inline void notStarredPartsLength(const string &s);
     int maxLength, minLength, notStarredPartsLen;
     QSet<QString> *ans;
-    QString regExp;
+    string regExp;
     QString error;
     bool isErr;
 

@@ -15,6 +15,7 @@ class CentralWidget : public QWidget
 public:
     explicit CentralWidget(QWidget *parent = nullptr);
     QVector <QChar> getAlphabet() const;
+    QString getAlphabetString() const;
     QString getStartChain() const;
     QString getEndChain() const;
     QChar getSymbolM() const;
@@ -26,17 +27,26 @@ public:
     QString getRegExp() const;
     void setRegExp(const QString &value);
 
-    void setMultiplicity(int value);
 
     int getMaxLen() const;
     void setMaxLen(int value);
     int getMinLen() const;
     void setMinLen(int value);
 
+    void setStartChain(const QString &value);
+    void setEndChain(const QString &value);
+    void setAlphabet(const QString &value);
+    void setMultiplicity(const int value);
+    void setSymbolM(const QString &value);
+
+    QString getChains() const;
+
 signals:
 
 public slots:
     void setChains(const QSet<QString> *s);
+    void setGenerateButtonActive();
+    void setGenerateButtonDisabled();
 
 private:
     QPushButton *generateRegExp, *generateChains;

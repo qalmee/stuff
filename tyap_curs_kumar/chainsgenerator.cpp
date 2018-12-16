@@ -15,6 +15,7 @@ ChainsGenerator::ChainsGenerator(const int maxLen, const int minLen, const QStri
     if (maxLength < 0) maxLength = 0;
     if (minLength < 0) minLength = 0;
     notStarredPartsLen = 0;
+    count = 0 ;
 }
 
 ChainsGenerator::~ChainsGenerator()
@@ -28,7 +29,6 @@ constexpr bool ChainsGenerator::is_op (char c) {
 
 int ChainsGenerator::bfs(const unordered_set<string> &s1, unordered_set<string> &res)
 {
-    int count = 0;
     int maxLenForBFS = maxLength - notStarredPartsLen;
     std::queue<string> q;
     res.clear();
@@ -41,7 +41,7 @@ int ChainsGenerator::bfs(const unordered_set<string> &s1, unordered_set<string> 
         }
     }
     while (!q.empty()){
-        if (count > 20000000) return 1;
+        if (count > MAX_COUNT) return 1;
         auto t = q.front();
         q.pop();
         for (auto str : s1){
@@ -113,6 +113,16 @@ void ChainsGenerator::notStarredPartsLength(const string &s)
 
 }
 
+int ChainsGenerator::numberOfDIgits(size_t a)
+{
+    int c = 0;
+    while (a > 0){
+        c++;
+        a/=10;
+    }
+    return c;
+}
+
 QString ChainsGenerator::getError() const
 {
     return error;
@@ -131,6 +141,7 @@ void ChainsGenerator::process_op (vector<unordered_set<string>> & st, char op) {
     if (timeToStop) return;
     auto s = st.back();
     st.pop_back();
+    qDebug()<<op;
 
     if (op == '+'){
         auto s1 = st.back();
@@ -146,7 +157,17 @@ void ChainsGenerator::process_op (vector<unordered_set<string>> & st, char op) {
         auto s1 = st.back();
         st.pop_back();
         unordered_set<string> newSet;
+        //qDebug() << numberOfDIgits(s.size()) << " " << numberOfDIgits(s1.size());
+        if (numberOfDIgits(s.size()) + numberOfDIgits(s1.size()) > 8 || s.size() * s1.size() > 100000000){
+            timeToStop = 2;
+            return;
+        }
         newSet.reserve(s.size() * s1.size() * 2);
+        count += s.size() * s1.size();
+        if (count > MAX_COUNT) {
+            timeToStop = 1;
+            return;
+        }
         for (const auto &str : s1){
             for (const auto &str1 : s){
                 if (static_cast<int>(str.size() + str1.size()) <= maxLength) newSet.insert(str + str1);
@@ -155,9 +176,10 @@ void ChainsGenerator::process_op (vector<unordered_set<string>> & st, char op) {
         st.push_back(newSet);
     } else if (op == '*'){
         unordered_set<string> newSet;
-        if (bfs(s, newSet) != 0) timeToStop = true;
+        if (bfs(s, newSet) != 0) timeToStop = 1;
         st.push_back(newSet);
     }
+    //qDebug() << count;
 }
 
 void ChainsGenerator::process_op1(vector<int> &st, char op)
@@ -250,8 +272,13 @@ void ChainsGenerator::run()
         return;
     }
     calculate();
-    if (timeToStop){
+    if (timeToStop == 1){
         emit resultReady(ans, true, "Превышенно время ожидания");
+        return;
+    }
+    else if (timeToStop == 2){
+        emit resultReady(ans, true, "Ожидаемое время расчетов слишком велико.\nПопробуйте уменьшить границы генерации цепочек");
+        return;
     }
     emit resultReady(ans, false, "ok");
 }

@@ -69,6 +69,10 @@ void MainWindow::generateChains()
         QMessageBox::warning(nullptr, "Ошибка", "Максимальная длина меньше минимальной");
         return;
     }
+    if (centralWidget->getRegExp().isEmpty()){
+        QMessageBox::warning(nullptr, "Ошибка", "Введено пустое РВ");
+        return;
+    }
     QString copyRegExp = centralWidget->getRegExp();
     copyRegExp = RegExpGenerator::calculateRegExpForRPN(copyRegExp);
     auto chainsGenerator = new ChainsGenerator(maxLen, minLen, copyRegExp);

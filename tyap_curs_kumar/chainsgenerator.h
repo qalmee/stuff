@@ -32,7 +32,7 @@ public:
 
     QString getError() const;
 
-    bool timeToStop = false;
+    int timeToStop = 0;
 
 private:
     inline void process_op (vector<unordered_set<string>> & st, char op);
@@ -41,11 +41,14 @@ private:
     constexpr bool is_op (char c);
     inline int bfs(const unordered_set<string> &s1, unordered_set<string> &res);
     inline void notStarredPartsLength(const string &s);
+    inline int numberOfDIgits(size_t a);
     int maxLength, minLength, notStarredPartsLen;
     QSet<QString> *ans;
     string regExp;
     QString error;
     bool isErr;
+    size_t count;
+    const size_t MAX_COUNT = 200000000;
 
 signals:
     void resultReady(QSet<QString> *ans, bool err, QString errorText);

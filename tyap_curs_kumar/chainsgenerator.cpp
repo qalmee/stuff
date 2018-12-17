@@ -7,11 +7,11 @@
 #include <QDebug>
 #include <algorithm>
 #include <queue>
+#include <stack>
 
 ChainsGenerator::ChainsGenerator(const int maxLen, const int minLen, const QString &s) :
-    maxLength(maxLen), minLength(minLen), ans(new QSet<QString>()), isErr(false)
+    maxLength(maxLen), minLength(minLen), ans(new QSet<QString>()), regExp(s.toStdString()), isErr(false)
 {
-    regExp = s.toStdString();
     if (maxLength < 0) maxLength = 0;
     if (minLength < 0) minLength = 0;
     notStarredPartsLen = 0;
@@ -30,7 +30,7 @@ constexpr bool ChainsGenerator::is_op (char c) {
 int ChainsGenerator::bfs(const unordered_set<string> &s1, unordered_set<string> &res)
 {
     int maxLenForBFS = maxLength - notStarredPartsLen;
-    std::queue<string> q;
+    std::stack<string> q;
     res.clear();
     res.reserve(100000);
 
@@ -42,7 +42,7 @@ int ChainsGenerator::bfs(const unordered_set<string> &s1, unordered_set<string> 
     }
     while (!q.empty()){
         if (count > MAX_COUNT) return 1;
-        auto t = q.front();
+        auto t = q.top();
         q.pop();
         for (auto str : s1){
             count++;
@@ -55,6 +55,7 @@ int ChainsGenerator::bfs(const unordered_set<string> &s1, unordered_set<string> 
         }
     }
     res.insert("");
+    qDebug()<<res.size();
     return 0;
 }
 
@@ -141,7 +142,6 @@ void ChainsGenerator::process_op (vector<unordered_set<string>> & st, char op) {
     if (timeToStop) return;
     auto s = st.back();
     st.pop_back();
-    qDebug()<<op;
 
     if (op == '+'){
         auto s1 = st.back();
@@ -173,6 +173,7 @@ void ChainsGenerator::process_op (vector<unordered_set<string>> & st, char op) {
                 if (static_cast<int>(str.size() + str1.size()) <= maxLength) newSet.insert(str + str1);
             }
         }
+        qDebug()<<newSet.size();
         st.push_back(newSet);
     } else if (op == '*'){
         unordered_set<string> newSet;

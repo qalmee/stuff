@@ -185,7 +185,7 @@ void ChainsGenerator::process_op (vector<unordered_set<string>> & st, char op) {
 void ChainsGenerator::process_op1(vector<int> &st, char op)
 {
     if (st.empty()){
-        throw new std::runtime_error("Стэк операндов неожиданно пуст");
+        throw new std::runtime_error("Стэк операндов неожиданно пуст.\nКод ошибки 3.");
     }
     if (op == ')' || op == '(') return;
     auto n = st.back();
@@ -193,14 +193,14 @@ void ChainsGenerator::process_op1(vector<int> &st, char op)
 
     if (op == '+'){
         if (st.empty()){
-            throw new std::runtime_error("Стэк операндов неожиданно пуст");
+            throw new std::runtime_error("Стэк операндов неожиданно пуст.\nКод ошибки 3.");
         }
         auto n1 = st.back();
         st.pop_back();
         st.push_back(std::min(n, n1));
     } else if (op == '&'){
         if (st.empty()){
-            throw new std::runtime_error("Стэк операндов неожиданно пуст");
+            throw new std::runtime_error("Стэк операндов неожиданно пуст.\nКод ошибки 3.");
         }
         auto n1 = st.back();
         st.pop_back();
@@ -250,7 +250,7 @@ void ChainsGenerator::calculate() {
 
     while (!operatorStack.empty()){
         if (operandStack.empty()){
-            throw new std::runtime_error("Стэк операндов неожиданно опустел");
+            throw new std::runtime_error("Стэк операндов неожиданно опустел\n.Код ошибки 4.");
         }
         process_op (operandStack, operatorStack.back());  operatorStack.pop_back();
     }
@@ -268,16 +268,16 @@ void ChainsGenerator::run()
         emit resultReady(ans, true, err->what());
         return;
     }catch(void*){
-        emit resultReady(ans, true, "Полный ойойой");
+        emit resultReady(ans, true, "Полный ойойой.");
         return;
     }
     calculate();
     if (timeToStop == 1){
-        emit resultReady(ans, true, "Превышенно время ожидания");
+        emit resultReady(ans, true, "Превышенно время ожидания.");
         return;
     }
     else if (timeToStop == 2){
-        emit resultReady(ans, true, "Ожидаемое время расчетов слишком велико.\nПопробуйте уменьшить границы генерации цепочек");
+        emit resultReady(ans, true, "Ожидаемое время расчетов слишком велико.\nПопробуйте уменьшить границы генерации цепочек.");
         return;
     }
     emit resultReady(ans, false, "ok");

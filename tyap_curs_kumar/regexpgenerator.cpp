@@ -32,6 +32,7 @@ QString RegExpGenerator::generate()
             primary += anyString + "*" + QString(1, symbol);
         }
         primary += anyString + "*";
+        primary += "+" + anyString + "*";
         primary = "(" + primary + ")*";
     }else{
         primary = generateAnyStringWithoutRestrictions() + "*";

@@ -63,10 +63,14 @@ CentralWidget::CentralWidget(QWidget *parent) : QWidget(parent)
 QVector<QChar> CentralWidget::getAlphabet() const
 {
     QString text = alphabet->text();
+    QSet<QChar> st;
     QVector <QChar> v;
     v.reserve(text.size());
     for (auto ch : text){
-        if (ch != ' ' && ch != ',' && ch != nullptr) v.push_back(ch);
+        if (ch != ' ' && ch != ',' && ch != nullptr) st.insert(ch);
+    }
+    for (auto ch : st){
+        v.push_back(ch);
     }
     return v;
 }

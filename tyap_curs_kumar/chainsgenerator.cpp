@@ -44,8 +44,8 @@ int ChainsGenerator::bfs(const unordered_set<string> &s1, unordered_set<string> 
         if (count > MAX_COUNT) return 1;
         auto t = q.top();
         q.pop();
+        count += s1.size();
         for (auto str : s1){
-            count++;
             if (str.empty()) continue;
             str += t;
             if (static_cast<int>(str.size()) <= maxLenForBFS && res.count(str) == 0){

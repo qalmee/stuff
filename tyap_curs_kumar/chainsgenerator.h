@@ -48,7 +48,7 @@ private:
     QString error;
     bool isErr;
     size_t count;
-    const size_t MAX_COUNT = 200000000;
+    const size_t MAX_COUNT = 150000000;
 
 signals:
     void resultReady(QSet<QString> *ans, bool err, QString errorText);

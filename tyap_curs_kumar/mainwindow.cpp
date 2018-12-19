@@ -8,6 +8,7 @@
 #include <QMenuBar>
 #include <QFileDialog>
 #include "aboutdialog.h"
+#include <QTextCodec>
 //#include <>
 
 MainWindow::MainWindow(QApplication *app, QWidget *parent)
@@ -37,6 +38,12 @@ void MainWindow::generateRegExp()
     auto endChain = centralWidget->getEndChain();
     auto symbolM = centralWidget->getSymbolM();
     auto mul = centralWidget->getMultiplicity();
+    for (auto ch : alphabet){
+        if (ch == '*' || ch == '+' || ch == '(' || ch == ')' || ch == '&'){
+            QMessageBox::warning(nullptr, "Ошибка", "Недопустимый символ в алфавите");
+            return;
+        }
+    }
     for (auto ch : startChain){
         if (!alphabet.contains(ch)){
             QMessageBox::warning(nullptr, "Ошибка", "Начальная подцепочка содержит не алфавитный символ");
@@ -102,36 +109,36 @@ void MainWindow::setAnswer(QSet<QString> *ans, bool err, const QString &text)
 
 void MainWindow::createActions()
 {
-    importFrom = new QAction("Загрузить из фала", this);
-    importFrom->setStatusTip("Импортировать данные из файла в программу");
+    importFrom = new QAction(tr("Загрузить из файла"), this);
+    importFrom->setStatusTip(tr("Импортировать данные из файла в программу"));
     connect(importFrom, &QAction::triggered, this, &MainWindow::importFromSlot);
 
-    exportIn = new QAction("Выгрузить в файл", this);
-    importFrom->setStatusTip("Экспортировать результат в файл");
+    exportIn = new QAction(tr("Выгрузить в файл"), this);
+    importFrom->setStatusTip(tr("Экспортировать результат в файл"));
     connect(exportIn, &QAction::triggered, this, &MainWindow::exportInSlot);
 
-    about = new QAction("Об авторе", this);
+    about = new QAction(tr("Об авторе"), this);
     connect(about, &QAction::triggered, this, &MainWindow::aboutSlot);
 
-    task = new QAction("Задание", this);
+    task = new QAction(tr("Задание"), this);
     connect(task, &QAction::triggered, this, &MainWindow::taskSlot);
 
-    example = new QAction("Показать пример", this);
+    example = new QAction(tr("Показать пример"), this);
     connect(example, &QAction::triggered, this, &MainWindow::exampleSlot);
 
-    exitAct = new QAction("Выход", this);
+    exitAct = new QAction(tr("Выход"), this);
     connect(exitAct, &QAction::triggered, myApp, &QApplication::quit);
 }
 
 void MainWindow::createMenus()
 {
-    file = menuBar()->addMenu("Файл");
+    file = menuBar()->addMenu(tr("Файл"));
     file->addAction(importFrom);
     file->addAction(exportIn);
     file->addSeparator();
     file->addAction(exitAct);
 
-    help = menuBar()->addMenu("Помощь");
+    help = menuBar()->addMenu((QString::fromUtf8("Помощь")));
     help->addAction(task);
     help->addAction(example);
     help->addSeparator();
@@ -203,8 +210,8 @@ void MainWindow::taskSlot(){
     s += "Алфавит, заданные начальная и конечная подцепочки и\nкратность вхождения некоторого символа алфавита во все цепочки языка.";
 
     AboutDialog *dd = new AboutDialog(s);
-    dd->show();
     connect(dd, &AboutDialog::finished, dd, &AboutDialog::deleteLater);
+    dd->show();
 }
 
 void MainWindow::exampleSlot()

@@ -39,10 +39,25 @@ void MainWindow::cancelDialog()
     app->exit();
 }
 
-void MainWindow::okDialog(int numberOfStates, int numberOfTerminals)
+void MainWindow::okDialog(int _numberOfStates, int _numberOfTerminals, QVector <QVector<QString>> _states,
+                          QVector <QString> _terminals,  QString _finalChain, int _mulTimes, QString _mulSymbol)
 {    
-    this->numberOfStates = numberOfStates;
-    this->numberOfTerminals = numberOfTerminals;
+    terminals.clear();
+    statesNames.clear();
+    statesValues.clear();
+
+    this->numberOfStates = _numberOfStates;
+    this->numberOfTerminals = _numberOfTerminals;
+    this->statesValues = _states;
+    this->terminals = _terminals;
+    this->finalChain = _finalChain;
+    this->mulTimes = _mulTimes;
+    this->mulSymbol = _mulSymbol;
+
+    for (int i = 0; i < numberOfStates; ++i)
+    {
+        statesNames.push_back(QString("q" + QString::number(i+1)));
+    }
     this->dialog->hide();
     this->dialog->clear();
     this->constructStuff();
@@ -52,20 +67,15 @@ void MainWindow::okDialog(int numberOfStates, int numberOfTerminals)
 
 void MainWindow::checkChainSlot()
 {
-    terminals.clear();
-    statesNames.clear();
-    statesValues.clear();
     QSet<QString> terminalsSet, statesNamesSet;
     for (int i = 0; i < numberOfTerminals; ++i)
     {
         terminalsSet.insert(terminalsLines[i]->text());
-        terminals.push_back(terminalsLines[i]->text());
     }
 
     for (int i = 0; i < numberOfStates; ++i)
     {
         statesNamesSet.insert(statesLines[i]->text());
-        statesNames.push_back(statesLines[i]->text());
     }
     if (terminalsSet.size() != terminals.size() || statesNamesSet.size() != statesNames.size()
             || terminalsSet.contains("") || statesNamesSet.contains("")){
@@ -75,7 +85,7 @@ void MainWindow::checkChainSlot()
 
     for (int i = 0; i < numberOfStates; ++i)
     {
-        statesValues.push_back(QVector<QString>());
+        //statesValues.push_back(QVector<QString>());
 
         for (int j = 0; j < numberOfTerminals; ++j)
         {
@@ -83,9 +93,9 @@ void MainWindow::checkChainSlot()
                 this->badInputSlot();
                 return;
             }
-            statesValues[i].push_back(statesValuesLines[i][j]->text());
+            //statesValues[i].push_back(statesValuesLines[i][j]->text());
         }
-    }    
+    }
     chainString = chainLine->text();
     this->runMachine();
 }
@@ -109,12 +119,11 @@ void MainWindow::returnToDialogSlot()
 
 void MainWindow::prepareView()
 {
-
     statesLines.reserve(numberOfStates);
 
     for (int i = 0; i < numberOfStates ; ++i)
     {
-        QLineEdit *temp = new QLineEdit();
+        QLineEdit *temp = new QLineEdit(QString(statesNames[i]));
         temp->setMaximumWidth(150);
         statesLines.push_back(temp);
         tableLayout->addWidget(temp, i + 2, 0);
@@ -125,7 +134,7 @@ void MainWindow::prepareView()
     terminalsLines.reserve(numberOfTerminals);
     for (int i = 0; i < numberOfTerminals; ++i)
     {
-        QLineEdit *temp = new QLineEdit();
+        QLineEdit *temp = new QLineEdit(QString(terminals[i]));
         temp->setMaximumWidth(60);
         temp->setValidator(regExpVal);
         terminalsLines.push_back(temp);
@@ -138,7 +147,7 @@ void MainWindow::prepareView()
         statesValuesLines.push_back(QVector<QLineEdit*>());
         for (int j = 0; j < numberOfTerminals; ++j)
         {
-            QLineEdit *temp = new QLineEdit();
+            QLineEdit *temp = new QLineEdit(QString(statesValues[i][j]));
             temp->setMaximumWidth(60);
             statesValuesLines[i].push_back(temp);
             tableLayout->addWidget(temp, i + 2, j + 2);
@@ -156,10 +165,11 @@ void MainWindow::prepareView()
     tableLayout->addWidget(startState, numberOfStates + 4, 0);
     tableLayout->addWidget(finishStateLabel, numberOfStates + 5, 0);
     tableLayout->addWidget(finishState, numberOfStates + 6, 0);
-    startStateLabel->hide();
-    startState->hide();
-    finishStateLabel->hide();
-    finishState->hide();
+    tableLayout->addWidget(taskLabel, numberOfStates + 8, 0);
+    //startStateLabel->hide();
+    //startState->hide();
+    //finishStateLabel->hide();
+    //finishState->hide();
     modelComboBox = new QStandardItemModel;
     for (int i = 0; i < numberOfStates; ++i)
     {
@@ -173,6 +183,19 @@ void MainWindow::prepareView()
 
     tableLayout->addWidget(lineH, 1, 0, 1, numberOfTerminals + 2);
     tableLayout->addWidget(lineV, 0, 1, numberOfStates + 2, 1);
+
+    for (int i = 0; i < numberOfStates; ++i)
+    {
+        startState->addItem(statesLines[i]->text());
+        modelComboBox->item(i)->setText(statesLines[i]->text());
+    }
+
+    startStateLabel->show();
+    startState->show();
+    finishStateLabel->show();
+    finishState->show();
+    startState->setCurrentIndex(0);
+    finishState->setCurrentIndex(statesNames.length());
 }
 
 void MainWindow::constructStuff()
@@ -203,11 +226,13 @@ void MainWindow::constructStuff()
     chainLine = new QLineEdit();
     checkChainButton = new QPushButton ("Проверить цепочку");
     returnToDialogButton = new QPushButton("Вернуться к условию");
+    taskLabel = new QLabel("Конечная цепочка \"" + finalChain + "\". Символ \"" + mulSymbol +"\" повторяется" + QString::number(mulTimes) + " раз.");
 
     startStateLabel = new QLabel("Начальное состояние:");
     finishStateLabel = new QLabel("Конечные состояния:");
     startState = new QComboBox();
     finishState = new QComboBox();
+
 
 
     QObject::connect(checkChainButton, &QPushButton::clicked, this, &MainWindow::checkChainSlot);
@@ -238,6 +263,7 @@ void MainWindow::deleteStuff()
     delete chainLine;
     delete checkChainButton;
     delete returnToDialogButton;
+    delete taskLabel;
 
     for (auto &x : statesLines)
         delete x;
@@ -275,6 +301,8 @@ void MainWindow::checkStatesSlot()
     startState->show();
     finishStateLabel->show();
     finishState->show();
+    startState->setCurrentIndex(0);
+    finishState->setCurrentIndex(statesNames.length());
 }
 
 void MainWindow::runMachine()

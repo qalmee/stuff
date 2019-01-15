@@ -26,7 +26,8 @@ public slots:
     void checkAlphabetSlot();
 
 signals:
-    void finished(int numberOfStates, int numberOfTerminals, QVector <QVector<QString>> states);
+    void finished(int numberOfStates, int numberOfTerminals, QVector <QVector<QString>> states,
+                  QVector<QString> terminals, QString finalChain, int mulTimes, QString mulSymbol);
     void canceled();
 
 private:

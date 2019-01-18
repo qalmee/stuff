@@ -40,7 +40,7 @@ void MainWindow::cancelDialog()
 }
 
 void MainWindow::okDialog(int _numberOfStates, int _numberOfTerminals, QVector <QVector<QString>> _states,
-                          QVector <QString> _terminals,  QString _finalChain, int _mulTimes, QString _mulSymbol)
+                          QVector <QString> _terminals,  QString _finalChain, int _mulTimes, QString _mulSymbol, int _finalState)
 {    
     terminals.clear();
     statesNames.clear();
@@ -53,6 +53,7 @@ void MainWindow::okDialog(int _numberOfStates, int _numberOfTerminals, QVector <
     this->finalChain = _finalChain;
     this->mulTimes = _mulTimes;
     this->mulSymbol = _mulSymbol;
+    this->finalStateInt = _finalState;
 
     for (int i = 0; i < numberOfStates; ++i)
     {
@@ -125,9 +126,15 @@ void MainWindow::prepareView()
     {
         QLineEdit *temp = new QLineEdit(QString(statesNames[i]));
         temp->setMaximumWidth(150);
+        temp->setReadOnly(true);
+        QPalette *palette = new QPalette();
+        palette->setColor(QPalette::Base,Qt::lightGray);
+        palette->setColor(QPalette::Text,Qt::black);
+        temp->setPalette(*palette);
+
         statesLines.push_back(temp);
         tableLayout->addWidget(temp, i + 2, 0);
-        QObject::connect(temp, &QLineEdit::textChanged, this, &MainWindow::checkStatesSlot);
+        //QObject::connect(temp, &QLineEdit::textChanged, this, &MainWindow::checkStatesSlot);
 
     }
 
@@ -136,6 +143,12 @@ void MainWindow::prepareView()
     {
         QLineEdit *temp = new QLineEdit(QString(terminals[i]));
         temp->setMaximumWidth(60);
+        temp->setReadOnly(true);
+        QPalette *palette = new QPalette();
+        palette->setColor(QPalette::Base,Qt::lightGray);
+        palette->setColor(QPalette::Text,Qt::black);
+        temp->setPalette(*palette);
+
         temp->setValidator(regExpVal);
         terminalsLines.push_back(temp);
         tableLayout->addWidget(temp, 0, i + 2);
@@ -148,6 +161,12 @@ void MainWindow::prepareView()
         for (int j = 0; j < numberOfTerminals; ++j)
         {
             QLineEdit *temp = new QLineEdit(QString(statesValues[i][j]));
+            temp->setReadOnly(true);
+            QPalette *palette = new QPalette();
+            palette->setColor(QPalette::Base,Qt::lightGray);
+            palette->setColor(QPalette::Text,Qt::black);
+            temp->setPalette(*palette);
+
             temp->setMaximumWidth(60);
             statesValuesLines[i].push_back(temp);
             tableLayout->addWidget(temp, i + 2, j + 2);
@@ -166,10 +185,11 @@ void MainWindow::prepareView()
     tableLayout->addWidget(finishStateLabel, numberOfStates + 5, 0);
     tableLayout->addWidget(finishState, numberOfStates + 6, 0);
     tableLayout->addWidget(taskLabel, numberOfStates + 8, 0);
+    tableLayout->addWidget(taskLabel2, numberOfStates + 9, 0);
     //startStateLabel->hide();
-    //startState->hide();
+    startState->hide();
     //finishStateLabel->hide();
-    //finishState->hide();
+    finishState->hide();
     modelComboBox = new QStandardItemModel;
     for (int i = 0; i < numberOfStates; ++i)
     {
@@ -191,11 +211,11 @@ void MainWindow::prepareView()
     }
 
     startStateLabel->show();
-    startState->show();
+    //startState->show();
     finishStateLabel->show();
-    finishState->show();
-    startState->setCurrentIndex(0);
-    finishState->setCurrentIndex(statesNames.length());
+    //finishState->show();
+    //startState->setCurrentIndex(0);
+    //finishState->setCurrentIndex(statesNames.length());
 }
 
 void MainWindow::constructStuff()
@@ -226,10 +246,10 @@ void MainWindow::constructStuff()
     chainLine = new QLineEdit();
     checkChainButton = new QPushButton ("Проверить цепочку");
     returnToDialogButton = new QPushButton("Вернуться к условию");
-    taskLabel = new QLabel("Конечная цепочка \"" + finalChain + "\". Символ \"" + mulSymbol +"\" повторяется" + QString::number(mulTimes) + " раз.");
-
-    startStateLabel = new QLabel("Начальное состояние:");
-    finishStateLabel = new QLabel("Конечные состояния:");
+    taskLabel = new QLabel("Конечная цепочка \" " + finalChain + "\" ");
+    taskLabel2 = new QLabel("Символ \"" + mulSymbol +"\" кратен " + QString::number(mulTimes));
+    startStateLabel = new QLabel("Начальное состояние: q1");
+    finishStateLabel = new QLabel("Конечное состояние: q" + QString::number(finalStateInt));
     startState = new QComboBox();
     finishState = new QComboBox();
 
@@ -264,6 +284,7 @@ void MainWindow::deleteStuff()
     delete checkChainButton;
     delete returnToDialogButton;
     delete taskLabel;
+    delete taskLabel2;
 
     for (auto &x : statesLines)
         delete x;
@@ -277,6 +298,15 @@ void MainWindow::deleteStuff()
         }
     }
     statesValuesLines.clear();
+
+    for (auto &x : statesNames)
+        x.clear();
+
+    for (auto &x :terminals)
+        x.clear();
+
+    for (auto &x :statesValues)
+        x.clear();
 }
 
 void MainWindow::checkStatesSlot()
@@ -309,7 +339,8 @@ void MainWindow::runMachine()
 {
     QVector<bool> finishMask(numberOfStates);
     for (int i = 0; i<numberOfStates; i++){
-        finishMask[i] = (modelComboBox->item(i)->checkState() == Qt::Checked);
+        //finishMask[i] = (modelComboBox->item(i)->checkState() == Qt::Checked);
+        if (i == finalStateInt-1) finishMask[i] = true;
     }
     machine->setChain(chainString);
     machine->setData(&statesNames, &terminals, &statesValues,

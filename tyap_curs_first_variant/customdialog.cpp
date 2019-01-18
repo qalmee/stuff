@@ -67,6 +67,7 @@ void CustomDialog::statesFilling()
     finalChain = finalChainLine->text();
     mulSymbol = alphabet[mulSymbolBox->currentIndex()];
     mulTimes = mulTimesLine->text().toInt();
+    finalState = 0;
 
     bool trig = false;
 
@@ -83,7 +84,10 @@ void CustomDialog::statesFilling()
         numberOfTerminals = alphabet.length();
         QVector<QString> stateTemp;
         stateTemp.resize(alphabet.length());
-        int nextCharInt = 2;
+        int nextCharInt = 1;
+        if (mulTimes > 1)
+            nextCharInt++;
+
         QString nextChar = QString::number(nextCharInt);
         QChar startChar = '1';
 
@@ -94,21 +98,22 @@ void CustomDialog::statesFilling()
                 mulSymbolIndex = j;
         }
 
+        int currentState = 1;
 
         for (int i = 0; i < mulTimes; ++i)
         {
             for (int j = 0; j < alphabet.length(); ++j)
             {
-                if (j == mulSymbolIndex && i != mulTimes-1)
+                if (j == mulSymbolIndex)
                 {
-                    stateTemp[j] = QString('q' + nextChar);
-                }
-                else if(j == mulSymbolIndex && i == mulTimes-1)
-                {
-                    stateTemp[j] = QString('q' + startChar);
+                    if (i != mulTimes - 1)
+                        stateTemp[j] = QString('q' + nextChar);
+                    else {
+                        stateTemp[j] = QString('q' + startChar);
+                    }
                 }
                 else {
-                    stateTemp[j] = QString('q') + QString::number(nextCharInt - 1);
+                    stateTemp[j] = QString('q') + QString::number(currentState);
                 }
             }
             states.push_back(stateTemp);
@@ -116,6 +121,8 @@ void CustomDialog::statesFilling()
             nextChar = QString::number(nextCharInt);
             stateTemp.clear();
             stateTemp.resize(alphabet.length());
+            finalState = currentState;
+            currentState++;
         }
     }
 
@@ -141,7 +148,7 @@ void CustomDialog::statesFilling()
             if (finalChain[i] == mulSymbol) mulSymbolRepeated++;
         }
 
-        if (mulTimes > mulSymbolRepeated)
+        if (mulTimes >= mulSymbolRepeated)
         {
             additionalMulSymbols = mulTimes - mulSymbolRepeated;
         }
@@ -168,6 +175,7 @@ void CustomDialog::statesFilling()
                     stateTemp[j] = 'q' + QString::number(nextCharInt-1);
             }
             states.push_back(stateTemp);
+            finalState = nextCharInt-1;
             nextCharInt++;
             nextChar = QString::number(nextCharInt);
             stateTemp.clear();
@@ -199,7 +207,7 @@ void CustomDialog::statesFilling()
                {
                    if (k == partOfFinalChainIndex)
                    {
-                       if (i == finalChain.length()-1)
+                       if (i == finalChain.length())
                        {
                             stateTemp[k]  = 'q' + QString::number(whereToReturnState);
                        }
@@ -229,6 +237,7 @@ void CustomDialog::statesFilling()
                }
 
                states.push_back(stateTemp);
+               finalState = nextCharInt - 1;
                nextCharInt++;
                nextChar = QString::number(nextCharInt);
                stateTemp.clear();
@@ -284,6 +293,7 @@ void CustomDialog::statesFilling()
                }
 
                states.push_back(stateTemp);
+               finalState = nextCharInt - 1;
                nextCharInt++;
                nextChar = QString::number(nextCharInt);
                stateTemp.clear();
@@ -380,6 +390,7 @@ void CustomDialog::statesFilling()
                 else
                     stateTemp[k] = QString ('q' + startChar);
             }
+            finalState = nextCharInt-1;
             states.push_back(stateTemp);
 
             nextCharInt++;
@@ -463,6 +474,7 @@ void CustomDialog::statesFilling()
                     }
                 }
                 states.push_back(stateTemp);
+                finalState = nextCharInt - 1;
                 nextCharInt++;
                 nextChar = QString::number(nextCharInt);
                 stateTemp.clear();
@@ -485,7 +497,7 @@ void CustomDialog::okPressed()
     }
     else {
         statesFilling();
-        emit finished(numberOfStates, numberOfTerminals, states, alphabet, finalChain, mulTimes, mulSymbol);
+        emit finished(numberOfStates, numberOfTerminals, states, alphabet, finalChain, mulTimes, mulSymbol, finalState);
     }
 }
 void CustomDialog::cancelPressed()

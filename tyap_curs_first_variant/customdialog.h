@@ -27,7 +27,7 @@ public slots:
 
 signals:
     void finished(int numberOfStates, int numberOfTerminals, QVector <QVector<QString>> states,
-                  QVector<QString> terminals, QString finalChain, int mulTimes, QString mulSymbol);
+                  QVector<QString> terminals, QString finalChain, int mulTimes, QString mulSymbol, int finalState);
     void canceled();
 
 private:
@@ -39,7 +39,7 @@ private:
     QPushButton *ok, *cancel;
     QVector <QString> alphabet;
     QString finalChain, mulSymbol;
-    int numberOfStates, numberOfTerminals, mulTimes;
+    int numberOfStates, numberOfTerminals, mulTimes, finalState;
     QVector<QVector<QString>> states;
 
 

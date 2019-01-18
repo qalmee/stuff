@@ -30,7 +30,7 @@ public:
 public slots:
     void cancelDialog();
     void okDialog(int _numberOfStates, int _numberOfTerminals, QVector <QVector<QString>> _states,
-                  QVector <QString> _terminals, QString _finalChain, int _mulTimes, QString _mulSymbol);
+                  QVector <QString> _terminals, QString _finalChain, int _mulTimes, QString _mulSymbol, int _finalState);
 
     void checkChainSlot();
     void returnToDialogSlot();
@@ -53,6 +53,7 @@ private:
     int numberOfStates;
     int numberOfTerminals;
     int mulTimes;
+    int finalStateInt;
     QString chainString;
     QString mulSymbol;
     QString finalChain;
@@ -77,6 +78,7 @@ private:
     QLabel *startStateLabel;
     QLabel *finishStateLabel;
     QLabel *taskLabel;
+    QLabel *taskLabel2;
     QFrame *lineV, *lineH, *secondLineH, *secondLineV, *thirdLineH;
 
     QApplication *app;

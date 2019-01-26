@@ -385,7 +385,7 @@ void CustomDialog::statesFilling()
             {
                 if (k == mulSymbolIndex)
                     stateTemp[k] = QString ('q' + QString::number(finalChain.length()+2));
-                else if (k != returnSymbolOfFinalChainIndex)
+                else if (k == returnSymbolOfFinalChainIndex)
                     stateTemp[k] = QString ('q' + QString::number(whereToReturnState));
                 else
                     stateTemp[k] = QString ('q' + startChar);

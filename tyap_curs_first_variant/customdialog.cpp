@@ -489,10 +489,7 @@ void CustomDialog::okPressed()
     int p;
     QString s = mulTimesLine->text();
 
-    /*if (QValidator::Acceptable != mulTimesLine->validator()->validate(s, p)){
-        QMessageBox::warning(this, "Ошибка", "Кратность символа ввведена некорректно");
-    }
-    else*/ if (!checkFinalChain()){
+    if (!checkFinalChain()){
         QMessageBox::warning(this, "Ошибка", "Некорректный ввод конечной подцепочки");
     }
     else {
